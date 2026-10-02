@@ -4,69 +4,241 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>OnCampus - Login</title>
+    <title>OnCampus — Login</title>
 
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
 </head>
 
 <body>
 
-    <div class="auth-container">
+    <!-- Background -->
+    <div class="auth-background">
+        <div class="grid"></div>
+        <div class="glow glow-blue"></div>
+        <div class="glow glow-orange"></div>
 
-        <div class="auth-card">
-
-            <div class="logo">
-                OnCampus
-            </div>
-
-            <h1>Welcome Back</h1>
-
-            <p class="subtitle">
-                Login to discover what's happening on campus.
-            </p>
-
-            <form id="loginForm">
-
-                <div class="form-group">
-                    <label for="email">Email</label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        placeholder="Enter your email"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-
-                    <input
-                        type="password"
-                        id="password"
-                        placeholder="Enter your password"
-                        required
-                    >
-                </div>
-
-                <button type="submit" class="primary-btn">
-                    Login
-                </button>
-
-            </form>
-
-            <p id="message" class="message"></p>
-
-            <div class="auth-footer">
-                Don't have an account?
-                <a href="register.html">Create one</a>
-            </div>
-
-        </div>
-
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
     </div>
 
+    <!-- Main -->
+    <main class="auth-page">
+
+        <!-- Left Brand Section -->
+        <section class="auth-intro">
+
+            <div class="brand-pill">
+                <span class="live-dot"></span>
+                RTU KOTA • STUDENT PLATFORM
+            </div>
+
+            <h1>
+                Campus life,
+                <span>on your campus.</span>
+            </h1>
+
+            <p>
+                Discover workshops, events, competitions and
+                opportunities happening around you.
+            </p>
+
+            <div class="intro-points">
+
+                <div class="intro-point">
+                    <div class="point-icon">01</div>
+                    <div>
+                        <strong>Discover</strong>
+                        <span>Find what's happening around campus.</span>
+                    </div>
+                </div>
+
+                <div class="intro-point">
+                    <div class="point-icon">02</div>
+                    <div>
+                        <strong>Register</strong>
+                        <span>Join activities with just a few clicks.</span>
+                    </div>
+                </div>
+
+                <div class="intro-point">
+                    <div class="point-icon">03</div>
+                    <div>
+                        <strong>Participate</strong>
+                        <span>Build experiences beyond the classroom.</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Login Card -->
+        <section class="auth-panel">
+
+            <div class="login-card">
+
+                <div class="login-brand">
+
+                    <div class="logo-wrap">
+                        <img
+                            src="assets/oncampus-logo.png"
+                            alt="OnCampus"
+                        >
+                    </div>
+
+                    <div class="brand-caption">
+                        CAMPUS ACTIVITY PLATFORM
+                    </div>
+
+                </div>
+
+                <div class="login-heading">
+
+                    <span class="eyebrow">WELCOME BACK</span>
+
+                    <h2>Sign in</h2>
+
+                    <p>
+                        Access your OnCampus account and
+                        continue exploring campus life.
+                    </p>
+
+                </div>
+
+                <form id="loginForm">
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email address
+                        </label>
+
+                        <div class="input-wrap">
+
+                            <span class="input-icon">@</span>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="you@example.com"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="label-row">
+
+                            <label for="password">
+                                Password
+                            </label>
+
+                        </div>
+
+                        <div class="input-wrap">
+
+                            <span class="input-icon">●</span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="passwordToggle"
+                                aria-label="Show password"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="login-button"
+                    >
+                        <span>Continue to OnCampus</span>
+                        <b>→</b>
+                    </button>
+
+                </form>
+
+                <div
+                    id="message"
+                    class="message"
+                    role="alert"
+                ></div>
+
+                <div class="login-divider">
+                    <span>OR</span>
+                </div>
+
+                <div class="register-box">
+
+                    <span>New to OnCampus?</span>
+
+                    <a href="register.html">
+                        Create your account
+                        <b>↗</b>
+                    </a>
+
+                </div>
+
+                <div class="login-security">
+
+                    <span class="security-dot"></span>
+
+                    <span>
+                        Secure student access
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="auth-footer">
+                <span>© 2026 OnCampus</span>
+                <span>Built for campus life</span>
+            </div>
+
+        </section>
+
+    </main>
+
     <script src="js/login.js"></script>
+
+    <script>
+        const passwordInput = document.getElementById("password");
+        const passwordToggle = document.getElementById("passwordToggle");
+
+        if (passwordToggle && passwordInput) {
+            passwordToggle.addEventListener("click", () => {
+
+                const isPassword =
+                    passwordInput.type === "password";
+
+                passwordInput.type =
+                    isPassword ? "text" : "password";
+
+                passwordToggle.textContent =
+                    isPassword ? "Hide" : "Show";
+
+            });
+        }
+    </script>
 
 </body>
 </html>

@@ -3,761 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#071522">
+    <meta name="theme-color" content="#061522">
+    <meta name="description" content="OnCampus — discover activities and opportunities at RTU Kota.">
     <title>OnCampus | RTU Kota</title>
-
     <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
-    <!-- PAGE LOADER -->
-    <div id="pageLoader" class="page-loader">
-        <div class="loader-logo">
-            <img src="assets/oncampus-logo.png" alt="OnCampus">
-        </div>
+<div id="pageLoader" class="page-loader">
+    <div class="loader-mark">
+        <img src="assets/oncampus-logo.png" alt="OnCampus">
+    </div>
+    <div class="loader-track"><span></span></div>
+</div>
 
-        <div class="loader-line">
-            <span></span>
+<div class="top-bar">
+    <div class="shell top-bar-inner">
+        <div class="top-left">
+            <span>RAJASTHAN TECHNICAL UNIVERSITY</span><i></i><span>KOTA</span>
+        </div>
+        <div class="top-links">
+            <a href="#activities">Campus Events</a>
+            <a href="activities.html">Opportunities</a>
+            <a href="#notificationSection">Notices</a>
+            <a href="https://www.rtu.ac.in/" target="_blank" rel="noopener">RTU Website ↗</a>
         </div>
     </div>
+</div>
 
+<header class="navbar">
+    <div class="shell navbar-inner">
+        <a href="#home" class="navbar-logo">
+            <img src="assets/oncampus-logo.png" alt="OnCampus - RTU Kota">
+            <span>RTU • KOTA</span>
+        </a>
 
-    <!-- TOP UNIVERSITY BAR -->
-    <div class="top-bar">
-        <div class="top-bar-inner">
+        <nav class="desktop-nav" aria-label="Primary navigation">
+            <a href="#home" class="nav-link active">Home</a>
+            <a href="activities.html" class="nav-link">Discover</a>
+            <a href="#registrations" class="nav-link">My Events</a>
+        </nav>
 
-            <div class="top-left">
-                <span>RAJASTHAN TECHNICAL UNIVERSITY</span>
-                <i></i>
-                <span>KOTA</span>
+        <div class="nav-right">
+            <button id="notificationShortcutBtn" class="icon-btn notification-button" type="button" aria-label="Notifications">
+                <span class="bell-icon">♢</span>
+                <span id="notificationBadge" class="notification-badge hidden">0</span>
+            </button>
+            <div class="profile">
+                <div id="userInitial" class="profile-avatar">A</div>
+                <div class="profile-info">
+                    <strong id="studentName">Student</strong>
+                    <span>STUDENT</span>
+                </div>
             </div>
-
-            <div class="top-links">
-                <a href="#activities">Campus Events</a>
-                <a href="activities.html">Opportunities</a>
-                <a href="#notificationSection">Notices</a>
-                <a
-                    href="https://www.rtu.ac.in/"
-                    target="_blank"
-                    rel="noopener"
-                >
-                    RTU Website ↗
-                </a>
-            </div>
-
+            <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
         </div>
+
+        <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu">☰</button>
     </div>
+</header>
 
+<main>
+    <section id="home" class="hero">
+        <div class="hero-noise"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-orbit hero-orbit-a"></div>
+        <div class="hero-orbit hero-orbit-b"></div>
+        <div class="hero-glow hero-glow-a"></div>
+        <div class="hero-glow hero-glow-b"></div>
 
-    <!-- NAVBAR -->
-    <header class="navbar">
-        <div class="navbar-inner">
-
-            <!-- LOGO -->
-            <a href="#home" class="navbar-logo">
-                <img
-                    src="assets/oncampus-logo.png"
-                    alt="OnCampus - RTU Kota"
-                >
-
-                <span>RTU • KOTA</span>
-            </a>
-
-
-            <!-- DESKTOP NAVIGATION -->
-            <nav class="desktop-nav">
-
-                <a
-                    href="#home"
-                    class="nav-link active"
-                >
-                    Home
-                </a>
-
-                <a
-                    href="activities.html"
-                    class="nav-link"
-                >
-                    Discover
-                </a>
-
-                <a
-                    href="#registrations"
-                    class="nav-link"
-                >
-                    My Events
-                </a>
-
-            </nav>
-
-
-            <!-- NAV RIGHT -->
-            <div class="nav-right">
-
-                <!-- NOTIFICATION BUTTON -->
-                <button
-                    id="notificationShortcutBtn"
-                    class="notification-button"
-                    aria-label="Notifications"
-                    type="button"
-                >
-                    <span class="notification-symbol">♢</span>
-
-                    <span
-                        id="notificationBadge"
-                        class="notification-badge hidden"
-                    >
-                        0
-                    </span>
-                </button>
-
-
-                <!-- PROFILE -->
-                <div class="profile">
-
-                    <div
-                        id="userInitial"
-                        class="profile-avatar"
-                    >
-                        A
-                    </div>
-
-                    <div class="profile-info">
-                        <strong id="studentName">
-                            Student
-                        </strong>
-
-                        <span>
-                            STUDENT
-                        </span>
-                    </div>
-
+        <div class="shell hero-inner">
+            <div class="hero-content">
+                <div class="hero-kicker reveal-item"><span class="kicker-line"></span><span>ONCAMPUS • RTU KOTA</span><span class="live-dot"></span><span>LIVE</span></div>
+                <h1 class="hero-heading reveal-item">
+                    <span>Everything</span>
+                    <span>happening</span>
+                    <span class="typing-line" id="heroChangingText"></span>
+                </h1>
+                <p class="hero-description reveal-item">Discover workshops, competitions, cultural events, sports and opportunities happening across your campus — all in one place.</p>
+                <div class="hero-actions reveal-item">
+                    <button id="exploreBtn" class="primary-btn magnetic-btn" type="button"><span>Explore campus</span><b>→</b></button>
+                    <button id="myEventsBtn" class="secondary-btn magnetic-btn" type="button">My registrations</button>
                 </div>
-
-
-                <!-- LOGOUT -->
-                <button
-                    id="logoutBtn"
-                    class="logout-btn"
-                    type="button"
-                >
-                    Logout
-                </button>
-
+                <div class="hero-trust reveal-item"><span>✓</span> One place for campus activities</div>
             </div>
 
+            <div class="hero-visual reveal-item">
+                <div class="visual-label">CAMPUS PLATFORM</div>
+                <div class="visual-ring ring-one"></div>
+                <div class="visual-ring ring-two"></div>
+                <div class="brand-showcase">
+                    <div class="showcase-glow"></div>
+                    <img src="assets/oncampus-logo.png" alt="OnCampus RTU Kota">
+                    <div class="showcase-scan"></div>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat"><strong id="heroActivityCount">0</strong><span>Activities</span></div>
+                    <div class="hero-stat-divider"></div>
+                    <div class="hero-stat"><strong>RTU</strong><span>Kota</span></div>
+                    <div class="hero-stat-divider"></div>
+                    <div class="hero-stat"><strong>24/7</strong><span>Discover</span></div>
+                </div>
+            </div>
         </div>
-    </header>
 
-
-    <!-- MAIN -->
-    <main>
-
-
-        <!-- HERO SECTION -->
-        <section
-            id="home"
-            class="hero"
-        >
-
-            <div class="hero-noise"></div>
-
-            <div class="hero-grid"></div>
-
-            <div class="hero-orb orb-one"></div>
-
-            <div class="hero-orb orb-two"></div>
-
-
-            <div class="hero-inner">
-
-                <!-- HERO CONTENT -->
-                <div class="hero-content">
-
-                    <!-- KICKER -->
-                    <div
-                        class="hero-kicker reveal-item"
-                        data-delay="0"
-                    >
-
-                        <span class="kicker-line"></span>
-
-                        <span>
-                            ONCAMPUS • RTU KOTA
-                        </span>
-
-                        <span class="live-dot"></span>
-
-                        LIVE
-
-                    </div>
-
-
-                    <!-- HERO HEADING -->
-                    <h1
-                        class="hero-heading reveal-item"
-                        data-delay="100"
-                    >
-
-                        <span class="hero-static">
-                            Everything
-                        </span>
-
-                        <span class="hero-static">
-                            happening
-                        </span>
-
-                        <span
-                            class="typing-line"
-                            id="heroChangingText"
-                        ></span>
-
-                    </h1>
-
-
-                    <!-- HERO DESCRIPTION -->
-                    <p
-                        class="hero-description reveal-item"
-                        data-delay="200"
-                    >
-                        Discover workshops, competitions, cultural events,
-                        sports and opportunities happening across your campus
-                        — all in one place.
-                    </p>
-
-
-                    <!-- HERO BUTTONS -->
-                    <div
-                        class="hero-actions reveal-item"
-                        data-delay="300"
-                    >
-
-                        <button
-                            id="exploreBtn"
-                            class="primary-btn magnetic-btn"
-                            type="button"
-                        >
-                            <span>
-                                Explore campus
-                            </span>
-
-                            <b>
-                                →
-                            </b>
-                        </button>
-
-
-                        <button
-                            id="myEventsBtn"
-                            class="secondary-btn magnetic-btn"
-                            type="button"
-                        >
-                            My registrations
-                        </button>
-
-                    </div>
-
-
-                    <!-- HERO TRUST -->
-                    <div
-                        class="hero-trust reveal-item"
-                        data-delay="400"
-                    >
-
-                        <span class="trust-check">
-                            ✓
-                        </span>
-
-                        One place for campus activities
-
-                    </div>
-
-                </div>
-
-
-                <!-- HERO VISUAL -->
-                <div
-                    class="hero-visual reveal-item"
-                    data-delay="200"
-                >
-
-                    <div class="visual-label">
-                        CAMPUS PLATFORM
-                    </div>
-
-
-                    <div class="visual-ring ring-one"></div>
-
-                    <div class="visual-ring ring-two"></div>
-
-
-                    <!-- BRAND SHOWCASE -->
-                    <div class="brand-showcase">
-
-                        <div class="showcase-glow"></div>
-
-                        <img
-                            src="assets/oncampus-logo.png"
-                            alt="OnCampus RTU Kota"
-                        >
-
-                        <div class="showcase-scan"></div>
-
-                    </div>
-
-
-                    <!-- HERO STATS -->
-                    <div class="hero-stats">
-
-                        <div class="hero-stat">
-
-                            <strong id="heroActivityCount">
-                                0
-                            </strong>
-
-                            <span>
-                                Activities
-                            </span>
-
-                        </div>
-
-
-                        <div class="hero-stat-divider"></div>
-
-
-                        <div class="hero-stat">
-
-                            <strong>
-                                RTU
-                            </strong>
-
-                            <span>
-                                Kota
-                            </span>
-
-                        </div>
-
-
-                        <div class="hero-stat-divider"></div>
-
-
-                        <div class="hero-stat">
-
-                            <strong>
-                                24/7
-                            </strong>
-
-                            <span>
-                                Discover
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- HERO BOTTOM -->
-            <div class="hero-bottom">
-
-                <span>
-                    CAMPUS LIFE • CONNECTED
-                </span>
-
-                <span>
-                    SCROLL TO EXPLORE ↓
-                </span>
-
-            </div>
-
-        </section>
-
-
-        <!-- ANNOUNCEMENT STRIP -->
-        <section class="announcement-strip">
-
-            <div class="announcement-inner">
-
-                <span class="announcement-label">
-                    LATEST
-                </span>
-
-                <span
-                    id="announcementText"
-                    class="announcement-text"
-                >
-                    Discover what's happening on campus.
-                </span>
-
-                <button
-                    id="announcementNext"
-                    class="announcement-next"
-                    type="button"
-                >
-                    →
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- QUICK STATS -->
-        <section class="quick-stats">
-
-            <div class="quick-stat">
-
-                <span class="quick-stat-number">
-                    01
-                </span>
-
-                <div>
-                    <strong>
-                        Discover
-                    </strong>
-
-                    <span>
-                        Find campus activities
-                    </span>
-                </div>
-
-            </div>
-
-
-            <div class="quick-stat">
-
-                <span class="quick-stat-number">
-                    02
-                </span>
-
-                <div>
-                    <strong>
-                        Participate
-                    </strong>
-
-                    <span>
-                        Register in seconds
-                    </span>
-                </div>
-
-            </div>
-
-
-            <div class="quick-stat">
-
-                <span class="quick-stat-number">
-                    03
-                </span>
-
-                <div>
-                    <strong>
-                        Connect
-                    </strong>
-
-                    <span>
-                        Be part of campus life
-                    </span>
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- NOTIFICATIONS -->
-        <section
-            id="notificationSection"
-            class="content-section reveal-section"
-        >
-
-            <div class="section-heading">
-
-                <div>
-
-                    <span class="section-label">
-                        UPDATES
-                    </span>
-
-                    <h2>
-                        Notifications
-                    </h2>
-
-                    <p>
-                        Important updates related to your activities.
-                    </p>
-
-                </div>
-
-
-                <button
-                    id="markAllReadBtn"
-                    class="section-action"
-                    type="button"
-                >
-                    Mark all as read
-                </button>
-
-            </div>
-
-
-            <div
-                id="notificationsContainer"
-                class="notifications"
-            >
-
-                <div class="loading">
-                    Loading notifications...
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ACTIVITIES -->
-        <section
-            id="activities"
-            class="content-section reveal-section"
-        >
-
-            <div class="section-heading">
-
-                <div>
-
-                    <span class="section-label">
-                        CAMPUS LIFE
-                    </span>
-
-                    <h2>
-                        What's happening
-                    </h2>
-
-                    <p>
-                        Discover activities happening across RTU.
-                    </p>
-
-                </div>
-
-
-                <div class="activity-total">
-
-                    <strong id="activityCount">
-                        0
-                    </strong>
-
-                    <span>
-                        activities
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <!-- FILTERS -->
-            <div class="filters">
-
-                <!-- SEARCH -->
-                <div class="search">
-
-                    <span>
-                        ⌕
-                    </span>
-
-                    <input
-                        id="searchInput"
-                        type="text"
-                        placeholder="Search campus activities..."
-                        autocomplete="off"
-                    >
-
-                    <button
-                        id="clearSearchBtn"
-                        class="search-clear"
-                        type="button"
-                    >
-                        ×
-                    </button>
-
-                </div>
-
-
-                <!-- CATEGORY FILTER -->
-                <select id="categoryFilter">
-
-                    <option value="">
-                        All categories
-                    </option>
-
-                    <option value="Workshop">
-                        Workshop
-                    </option>
-
-                    <option value="Seminar">
-                        Seminar
-                    </option>
-
-                    <option value="Competition">
-                        Competition
-                    </option>
-
-                    <option value="Cultural">
-                        Cultural
-                    </option>
-
-                    <option value="Sports">
-                        Sports
-                    </option>
-
-                    <option value="Technical">
-                        Technical
-                    </option>
-
-                    <option value="Other">
-                        Other
-                    </option>
-
-                </select>
-
-
-                <!-- CLEAR FILTERS -->
-                <button
-                    id="clearFiltersBtn"
-                    class="clear-btn"
-                    type="button"
-                >
-                    Clear
-                </button>
-
-            </div>
-
-
-            <!-- ACTIVITIES CONTAINER -->
-            <div
-                id="activitiesContainer"
-                class="activity-grid"
-            >
-
-                <div class="loading">
-                    Loading activities...
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- MY REGISTRATIONS -->
-        <section
-            id="registrations"
-            class="content-section reveal-section"
-        >
-
-            <div class="section-heading">
-
-                <div>
-
-                    <span class="section-label">
-                        YOUR EVENTS
-                    </span>
-
-                    <h2>
-                        My registrations
-                    </h2>
-
-                    <p>
-                        Activities you've joined.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div
-                id="registrationsContainer"
-                class="registrations"
-            >
-
-                <div class="loading">
-                    Loading registrations...
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- FOOTER -->
-        <footer class="site-footer">
-
-            <div class="footer-top">
-
-                <div>
-
-                    <div class="footer-brand">
-                        OnCampus
-                    </div>
-
-                    <p>
-                        A campus activity discovery platform
-                        for students at RTU Kota.
-                    </p>
-
-                </div>
-
-
-                <div class="footer-links">
-
-                    <a href="#home">
-                        Home
-                    </a>
-
-                    <a href="activities.html">
-                        Discover
-                    </a>
-
-                    <a href="#registrations">
-                        My Events
-                    </a>
-
-                    <a
-                        href="https://www.rtu.ac.in/"
-                        target="_blank"
-                        rel="noopener"
-                    >
-                        RTU ↗
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <div class="footer-bottom">
-
-                <span>
-                    ONCAMPUS • RAJASTHAN TECHNICAL UNIVERSITY • KOTA
-                </span>
-
-                <span>
-                    Explore • Participate • Grow
-                </span>
-
-            </div>
-
-        </footer>
-
-    </main>
-
-
-    <!-- JAVASCRIPT -->
-    <script src="js/student.js"></script>
-
+        <div class="shell hero-bottom"><span>CAMPUS LIFE • CONNECTED</span><span>SCROLL TO EXPLORE ↓</span></div>
+    </section>
+
+    <section class="announcement-strip">
+        <div class="shell announcement-inner">
+            <span class="announcement-label">LATEST</span>
+            <span id="announcementText" class="announcement-text">Discover what's happening on campus.</span>
+            <button id="announcementNext" class="announcement-next" type="button" aria-label="Next announcement">→</button>
+        </div>
+    </section>
+
+    <section class="shell quick-stats">
+        <div class="quick-stat"><span>01</span><div><strong>Discover</strong><small>Find campus activities</small></div></div>
+        <div class="quick-stat"><span>02</span><div><strong>Participate</strong><small>Register in seconds</small></div></div>
+        <div class="quick-stat"><span>03</span><div><strong>Connect</strong><small>Be part of campus life</small></div></div>
+    </section>
+
+    <section class="shell discover-section reveal-section">
+        <div class="section-heading">
+            <div><span class="section-label">EXPLORE</span><h2>Explore your campus</h2></div>
+            <p>Find something worth being part of.</p>
+        </div>
+        <div class="category-grid">
+            <button class="category-card category-orange" data-category="Workshop" type="button"><span class="category-number">01</span><span class="category-icon">◇</span><strong>Workshops</strong><small>Learn something new</small><b>→</b></button>
+            <button class="category-card category-blue" data-category="Competition" type="button"><span class="category-number">02</span><span class="category-icon">◆</span><strong>Competitions</strong><small>Challenge yourself</small><b>→</b></button>
+            <button class="category-card category-navy" data-category="Cultural" type="button"><span class="category-number">03</span><span class="category-icon">✦</span><strong>Cultural</strong><small>Experience campus life</small><b>→</b></button>
+            <button class="category-card category-green" data-category="Sports" type="button"><span class="category-number">04</span><span class="category-icon">+</span><strong>Sports</strong><small>Play. Compete. Connect.</small><b>→</b></button>
+        </div>
+    </section>
+
+    <section id="notificationSection" class="shell content-section reveal-section">
+        <div class="section-heading">
+            <div><span class="section-label">UPDATES</span><h2>Notifications</h2><p>Important updates related to your activities.</p></div>
+            <button id="markAllReadBtn" class="section-action" type="button">Mark all as read</button>
+        </div>
+        <div id="notificationsContainer" class="notifications"><div class="loading">Loading notifications...</div></div>
+    </section>
+
+    <section id="activities" class="shell content-section reveal-section">
+        <div class="section-heading">
+            <div><span class="section-label">CAMPUS LIFE</span><h2>What's happening</h2><p>Discover approved activities happening across RTU.</p></div>
+            <div class="activity-total"><strong id="activityCount">0</strong><span>activities</span></div>
+        </div>
+
+        <div class="filters">
+            <div class="search-box"><span>⌕</span><input id="searchInput" type="text" placeholder="Search campus activities..." autocomplete="off"><button id="clearSearchBtn" type="button" aria-label="Clear search">×</button></div>
+            <select id="categoryFilter"><option value="">All categories</option><option value="Workshop">Workshop</option><option value="Seminar">Seminar</option><option value="Competition">Competition</option><option value="Cultural">Cultural</option><option value="Sports">Sports</option><option value="Technical">Technical</option><option value="Other">Other</option></select>
+            <button id="clearFiltersBtn" class="clear-btn" type="button">Clear</button>
+        </div>
+
+        <div id="activitiesContainer" class="activity-grid"><div class="loading">Loading activities...</div></div>
+    </section>
+
+    <section id="registrations" class="shell content-section reveal-section">
+        <div class="section-heading">
+            <div><span class="section-label">YOUR EVENTS</span><h2>My registrations</h2><p>Activities you've joined.</p></div>
+        </div>
+        <div id="registrationsContainer" class="registrations"><div class="loading">Loading registrations...</div></div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="shell footer-top">
+        <div><div class="footer-brand">OnCampus</div><p>A campus activity discovery platform for students at RTU Kota.</p></div>
+        <div class="footer-links"><a href="#home">Home</a><a href="activities.html">Discover</a><a href="#registrations">My Events</a><a href="https://www.rtu.ac.in/" target="_blank" rel="noopener">RTU ↗</a></div>
+    </div>
+    <div class="shell footer-bottom"><span>ONCAMPUS • RAJASTHAN TECHNICAL UNIVERSITY • KOTA</span><span>Campus life, connected.</span></div>
+</footer>
+
+<div id="toast" class="toast" role="status" aria-live="polite"><div class="toast-icon">✓</div><div><strong id="toastTitle">Done</strong><span id="toastMessage">Action completed.</span></div></div>
+
+<script src="js/student.js"></script>
 </body>
 </html>

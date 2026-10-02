@@ -1,1316 +1,319 @@
-/* =========================================================
-   ONCAMPUS — DISCOVER ACTIVITIES
-   ========================================================= */
+const API_BASE = "http://localhost:5001/api";
 
-.activities-page {
-    background: #f4f7fb;
-    color: #071522;
+const token = localStorage.getItem("token");
+const storedUser = localStorage.getItem("user");
+
+let user = null;
+let allActivities = [];
+
+try {
+    user = storedUser ? JSON.parse(storedUser) : null;
+} catch (error) {
+    user = null;
 }
 
-
-/* =========================================================
-   DISCOVER HERO
-   ========================================================= */
-
-.discover-hero {
-    position: relative;
-    min-height: 440px;
-    overflow: hidden;
-    background:
-        radial-gradient(
-            circle at 82% 20%,
-            rgba(35, 124, 255, 0.18),
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 15% 80%,
-            rgba(255, 123, 45, 0.10),
-            transparent 28%
-        ),
-        #071522;
-    color: #ffffff;
+if (!token) {
+    window.location.href = "index.html";
 }
 
-.discover-grid {
-    position: absolute;
-    inset: 0;
-    opacity: 0.18;
-    background-image:
-        linear-gradient(
-            rgba(255, 255, 255, 0.08) 1px,
-            transparent 1px
-        ),
-        linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0.08) 1px,
-            transparent 1px
-        );
-    background-size: 70px 70px;
-    mask-image: linear-gradient(
-        to bottom,
-        black,
-        transparent
-    );
-    animation: discoverGridMove 18s linear infinite;
+const pageLoader = document.getElementById("pageLoader");
+const activitiesContainer = document.getElementById("activitiesContainer");
+const emptyState = document.getElementById("emptyState");
+const searchInput = document.getElementById("searchInput");
+const categoryFilter = document.getElementById("categoryFilter");
+const clearSearchBtn = document.getElementById("clearSearchBtn");
+const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+const emptyClearBtn = document.getElementById("emptyClearBtn");
+const activityCount = document.getElementById("activityCount");
+const heroActivityCount = document.getElementById("heroActivityCount");
+const userName = document.getElementById("activitiesUserName");
+const userInitial = document.getElementById("activitiesUserInitial");
+const logoutBtn = document.getElementById("activitiesLogoutBtn");
+const toast = document.getElementById("activitiesToast");
+
+function hideLoader() {
+    if (pageLoader) pageLoader.classList.add("hidden");
 }
 
-@keyframes discoverGridMove {
-    from {
-        transform: translate3d(0, 0, 0);
+window.addEventListener("load", () => setTimeout(hideLoader, 500));
+setTimeout(hideLoader, 2000);
+
+function setupUser() {
+    const name = user?.name || "Student";
+    if (userName) userName.textContent = name;
+    if (userInitial) userInitial.textContent = name.charAt(0).toUpperCase();
+}
+
+async function apiFetch(path, options = {}) {
+    const response = await fetch(`${API_BASE}${path}`, {
+        ...options,
+        headers: {
+            ...(options.headers || {}),
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+        }
+    });
+
+    if (response.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "index.html";
+        throw new Error("Session expired");
     }
 
-    to {
-        transform: translate3d(70px, 70px, 0);
-    }
-}
+    const data = await response.json().catch(() => ({}));
 
-
-.discover-orb {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    filter: blur(2px);
-}
-
-.discover-orb-one {
-    width: 280px;
-    height: 280px;
-    top: 40px;
-    right: 12%;
-    background: rgba(36, 133, 255, 0.11);
-    box-shadow:
-        0 0 100px rgba(36, 133, 255, 0.20);
-    animation: discoverFloatOne 8s ease-in-out infinite;
-}
-
-.discover-orb-two {
-    width: 190px;
-    height: 190px;
-    bottom: -70px;
-    left: 12%;
-    background: rgba(255, 116, 40, 0.08);
-    box-shadow:
-        0 0 90px rgba(255, 116, 40, 0.16);
-    animation: discoverFloatTwo 10s ease-in-out infinite;
-}
-
-@keyframes discoverFloatOne {
-    0%,
-    100% {
-        transform: translate3d(0, 0, 0) scale(1);
+    if (!response.ok) {
+        throw new Error(data.message || "Unable to load activities.");
     }
 
-    50% {
-        transform: translate3d(-25px, 22px, 0) scale(1.08);
-    }
+    return data;
 }
 
-@keyframes discoverFloatTwo {
-    0%,
-    100% {
-        transform: translate3d(0, 0, 0);
-    }
-
-    50% {
-        transform: translate3d(35px, -20px, 0);
-    }
+function escapeHTML(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
+function formatDate(value) {
+    if (!value) return "—";
 
-.discover-hero-inner {
-    position: relative;
-    z-index: 2;
+    const text = String(value).slice(0, 10);
+    const parts = text.split("-");
 
-    width: min(
-        calc(100% - 48px),
-        1240px
+    if (parts.length !== 3) return value;
+
+    const date = new Date(
+        Number(parts[0]),
+        Number(parts[1]) - 1,
+        Number(parts[2])
     );
 
-    min-height: 390px;
-    margin: 0 auto;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 60px;
-
-    padding: 72px 0 55px;
+    return date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
 }
 
+function formatTime(value) {
+    if (!value) return "—";
 
-.discover-hero-copy {
-    max-width: 720px;
+    const parts = String(value).slice(0, 5).split(":");
+    if (parts.length < 2) return value;
+
+    let hour = Number(parts[0]);
+    const minute = parts[1];
+    const suffix = hour >= 12 ? "PM" : "AM";
+
+    hour %= 12;
+    if (hour === 0) hour = 12;
+
+    return `${hour}:${minute} ${suffix}`;
 }
 
-.discover-kicker {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+function showToast(message) {
+    if (!toast) return;
 
-    margin-bottom: 24px;
+    toast.textContent = message;
+    toast.classList.add("show");
 
-    color: #a9c6e6;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.18em;
+    clearTimeout(window.activitiesToastTimer);
+    window.activitiesToastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+    }, 3000);
 }
 
-.discover-kicker span {
-    width: 30px;
-    height: 2px;
-    background: #ff7a2f;
+function updateCounts(count) {
+    if (activityCount) activityCount.textContent = count;
+    if (heroActivityCount) heroActivityCount.textContent = count;
 }
 
-.discover-kicker i {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: #ff7a2f;
-}
+function populateCategories() {
+    if (!categoryFilter) return;
 
+    const current = categoryFilter.value;
+    const categories = [...new Set(
+        allActivities
+            .map(activity => activity.category)
+            .filter(Boolean)
+    )].sort();
 
-.discover-hero h1 {
-    margin: 0;
+    categoryFilter.innerHTML = `<option value="">All categories</option>`;
 
-    max-width: 760px;
+    categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        categoryFilter.appendChild(option);
+    });
 
-    font-size: clamp(
-        48px,
-        7vw,
-        88px
-    );
-
-    line-height: 0.96;
-    letter-spacing: -0.055em;
-    font-weight: 800;
-}
-
-.discover-hero h1 em {
-    display: block;
-
-    color: #ff7a2f;
-    font-style: normal;
-
-    text-shadow:
-        0 0 30px rgba(255, 122, 47, 0.16);
-}
-
-
-.discover-hero-copy p {
-    max-width: 570px;
-
-    margin: 28px 0 0;
-
-    color: #b8c9da;
-    font-size: 16px;
-    line-height: 1.75;
-}
-
-
-.discover-hero-stat {
-    position: relative;
-    z-index: 3;
-
-    min-width: 190px;
-
-    padding: 26px 28px;
-
-    border: 1px solid rgba(
-        255,
-        255,
-        255,
-        0.13
-    );
-
-    background: rgba(
-        255,
-        255,
-        255,
-        0.045
-    );
-
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-
-    box-shadow:
-        0 25px 70px rgba(
-            0,
-            0,
-            0,
-            0.22
-        );
-
-    animation: statFloat 5s ease-in-out infinite;
-}
-
-@keyframes statFloat {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-8px);
+    if (categories.includes(current)) {
+        categoryFilter.value = current;
     }
 }
 
-.discover-hero-stat strong {
-    display: block;
-
-    font-size: 58px;
-    line-height: 1;
-    letter-spacing: -0.05em;
-}
-
-.discover-hero-stat span {
-    display: block;
-
-    margin-top: 10px;
-
-    color: #8fa8bf;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.18em;
-}
-
-
-.discover-hero-bottom {
-    position: absolute;
-    z-index: 3;
-    bottom: 0;
-    left: 50%;
-
-    width: min(
-        calc(100% - 48px),
-        1240px
-    );
-
-    transform: translateX(-50%);
-
-    display: flex;
-    justify-content: space-between;
-
-    padding: 18px 0;
-
-    border-top: 1px solid rgba(
-        255,
-        255,
-        255,
-        0.10
-    );
-
-    color: #71879c;
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: 0.16em;
-}
-
-
-/* =========================================================
-   MAIN
-   ========================================================= */
-
-.discover-main {
-    padding: 82px 0 110px;
-}
-
-.discover-main-inner {
-    width: min(
-        calc(100% - 48px),
-        1240px
-    );
-
-    margin: 0 auto;
-}
-
-
-/* =========================================================
-   HEADING
-   ========================================================= */
-
-.discover-heading {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 30px;
-
-    margin-bottom: 35px;
-}
-
-.section-label {
-    display: inline-block;
-
-    margin-bottom: 10px;
-
-    color: #2879d8;
-    font-size: 10px;
-    font-weight: 900;
-    letter-spacing: 0.18em;
-}
-
-.discover-heading h2 {
-    margin: 0;
-
-    font-size: clamp(
-        32px,
-        4vw,
-        48px
-    );
-
-    line-height: 1;
-    letter-spacing: -0.04em;
-}
-
-.discover-heading p {
-    margin: 14px 0 0;
-
-    color: #6c7c8c;
-    font-size: 14px;
-}
-
-
-.discover-count {
-    display: flex;
-    align-items: baseline;
-    gap: 9px;
-
-    padding-bottom: 4px;
-}
-
-.discover-count strong {
-    font-size: 44px;
-    line-height: 1;
-    letter-spacing: -0.05em;
-}
-
-.discover-count span {
-    color: #8492a0;
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-}
-
-
-/* =========================================================
-   FILTER BAR
-   ========================================================= */
-
-.discover-filter-card {
-    display: grid;
-    grid-template-columns:
-        minmax(0, 1fr)
-        210px
-        auto;
-
-    gap: 12px;
-
-    padding: 12px;
-
-    margin-bottom: 35px;
-
-    border: 1px solid #e1e8ef;
-    border-radius: 18px;
-
-    background: #ffffff;
-
-    box-shadow:
-        0 15px 45px rgba(
-            7,
-            21,
-            34,
-            0.06
-        );
-}
-
-
-.discover-search {
-    position: relative;
-
-    display: flex;
-    align-items: center;
-
-    min-height: 52px;
-
-    border: 1px solid #e2e8ee;
-    border-radius: 12px;
-
-    background: #f8fafc;
-
-    transition:
-        border-color 0.25s ease,
-        box-shadow 0.25s ease,
-        background 0.25s ease;
-}
-
-.discover-search:focus-within {
-    border-color: #2879d8;
-
-    background: #ffffff;
-
-    box-shadow:
-        0 0 0 4px rgba(
-            40,
-            121,
-            216,
-            0.08
-        );
-}
-
-.discover-search > span {
-    width: 46px;
-
-    color: #718194;
-
-    font-size: 23px;
-    text-align: center;
-}
-
-.discover-search input {
-    width: 100%;
-
-    padding: 0 42px 0 0;
-
-    border: 0;
-    outline: 0;
-
-    background: transparent;
-
-    color: #071522;
-    font: inherit;
-    font-size: 14px;
-}
-
-.discover-search input::placeholder {
-    color: #9aa8b5;
-}
-
-
-.discover-search button {
-    position: absolute;
-    right: 12px;
-
-    width: 28px;
-    height: 28px;
-
-    border: 0;
-    border-radius: 50%;
-
-    background: transparent;
-
-    color: #8b99a7;
-
-    font-size: 21px;
-    line-height: 1;
-
-    cursor: pointer;
-
-    opacity: 0;
-    pointer-events: none;
-
-    transition:
-        opacity 0.2s ease,
-        background 0.2s ease;
-}
-
-.discover-search.has-value button {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.discover-search button:hover {
-    background: #e9eef4;
-}
-
-
-.discover-filter-card select {
-    min-height: 52px;
-
-    padding: 0 42px 0 16px;
-
-    border: 1px solid #e2e8ee;
-    border-radius: 12px;
-
-    outline: none;
-
-    background-color: #f8fafc;
-    color: #26394b;
-
-    font: inherit;
-    font-size: 13px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition:
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
-}
-
-.discover-filter-card select:focus {
-    border-color: #2879d8;
-
-    box-shadow:
-        0 0 0 4px rgba(
-            40,
-            121,
-            216,
-            0.08
-        );
-}
-
-
-.discover-clear,
-.discover-empty button {
-    min-height: 52px;
-
-    padding: 0 20px;
-
-    border: 1px solid #dbe3eb;
-    border-radius: 12px;
-
-    background: #071522;
-    color: #ffffff;
-
-    font: inherit;
-    font-size: 12px;
-    font-weight: 800;
-
-    cursor: pointer;
-
-    transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-.discover-clear:hover,
-.discover-empty button:hover {
-    transform: translateY(-2px);
-
-    background: #0e2639;
-
-    box-shadow:
-        0 10px 24px rgba(
-            7,
-            21,
-            34,
-            0.15
-        );
-}
-
-
-/* =========================================================
-   ACTIVITY GRID
-   ========================================================= */
-
-.discover-grid-list {
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 20px;
-}
-
-
-.discover-activity-card {
-    position: relative;
-
-    display: flex;
-    flex-direction: column;
-
-    min-height: 350px;
-
-    padding: 25px;
-
-    overflow: hidden;
-
-    border: 1px solid #e1e8ef;
-    border-radius: 20px;
-
-    background: #ffffff;
-
-    cursor: pointer;
-
-    box-shadow:
-        0 12px 35px rgba(
-            7,
-            21,
-            34,
-            0.055
-        );
-
-    transition:
-        transform 0.3s cubic-bezier(
-            0.2,
-            0.8,
-            0.2,
-            1
-        ),
-        box-shadow 0.3s ease,
-        border-color 0.3s ease;
-}
-
-.discover-activity-card::before {
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 3px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #2879d8,
-            #55a4ff,
-            #ff7a2f
-        );
-
-    transform: scaleX(0);
-    transform-origin: left;
-
-    transition:
-        transform 0.35s ease;
-}
-
-.discover-activity-card::after {
-    content: "";
-
-    position: absolute;
-
-    width: 170px;
-    height: 170px;
-
-    top: -90px;
-    right: -90px;
-
-    border-radius: 50%;
-
-    background: rgba(
-        40,
-        121,
-        216,
-        0.055
-    );
-
-    transition:
-        transform 0.45s ease;
-}
-
-.discover-activity-card:hover {
-    transform: translateY(-7px);
-
-    border-color: #d1dce7;
-
-    box-shadow:
-        0 25px 55px rgba(
-            7,
-            21,
-            34,
-            0.11
-        );
-}
-
-.discover-activity-card:hover::before {
-    transform: scaleX(1);
-}
-
-.discover-activity-card:hover::after {
-    transform: scale(1.7);
-}
-
-
-.discover-card-top {
-    position: relative;
-    z-index: 2;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    margin-bottom: 26px;
-}
-
-.discover-category {
-    display: inline-flex;
-    align-items: center;
-
-    min-height: 27px;
-
-    padding: 0 10px;
-
-    border-radius: 6px;
-
-    background: #edf5ff;
-    color: #2879d8;
-
-    font-size: 9px;
-    font-weight: 900;
-    letter-spacing: 0.13em;
-}
-
-.discover-card-index {
-    color: #b2bdc8;
-
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-}
-
-
-.discover-card-title {
-    position: relative;
-    z-index: 2;
-
-    margin: 0;
-
-    max-width: 520px;
-
-    color: #071522;
-
-    font-size: 25px;
-    line-height: 1.18;
-    letter-spacing: -0.035em;
-}
-
-
-.discover-card-description {
-    position: relative;
-    z-index: 2;
-
-    margin: 13px 0 25px;
-
-    color: #6f7f8e;
-
-    font-size: 13px;
-    line-height: 1.7;
-
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-
-    overflow: hidden;
-}
-
-
-/* =========================================================
-   ACTIVITY INFO
-   ========================================================= */
-
-.discover-card-info {
-    position: relative;
-    z-index: 2;
-
-    display: grid;
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 10px;
-
-    margin-top: auto;
-}
-
-.discover-info-item {
-    min-width: 0;
-
-    padding: 12px;
-
-    border-radius: 10px;
-
-    background: #f6f8fa;
-}
-
-.discover-info-item span {
-    display: block;
-
-    margin-bottom: 5px;
-
-    color: #98a5b1;
-
-    font-size: 8px;
-    font-weight: 900;
-    letter-spacing: 0.13em;
-}
-
-.discover-info-item strong {
-    display: block;
-
-    overflow: hidden;
-
-    color: #25394a;
-
-    font-size: 11px;
-    line-height: 1.35;
-
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-
-/* =========================================================
-   CARD FOOTER
-   ========================================================= */
-
-.discover-card-footer {
-    position: relative;
-    z-index: 2;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-
-    margin-top: 22px;
-    padding-top: 18px;
-
-    border-top: 1px solid #edf0f3;
-}
-
-.discover-organizer {
-    max-width: 55%;
-
-    overflow: hidden;
-
-    color: #83919d;
-
-    font-size: 10px;
-    font-weight: 700;
-
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-.discover-open {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-
-    color: #2879d8;
-
-    font-size: 10px;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.09em;
-
-    white-space: nowrap;
-}
-
-.discover-open b {
-    font-size: 17px;
-    font-weight: 500;
-
-    transition:
-        transform 0.2s ease;
-}
-
-.discover-activity-card:hover .discover-open b {
-    transform: translateX(5px);
-}
-
-
-/* =========================================================
-   LOADING
-   ========================================================= */
-
-.discover-loading {
-    grid-column: 1 / -1;
-
-    min-height: 260px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    gap: 18px;
-
-    border: 1px dashed #d6e0e8;
-    border-radius: 18px;
-
-    background: #ffffff;
-
-    color: #83909d;
-
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.discover-loading-bar {
-    position: relative;
-
-    width: 130px;
-    height: 3px;
-
-    overflow: hidden;
-
-    border-radius: 20px;
-
-    background: #e5ebf0;
-}
-
-.discover-loading-bar::after {
-    content: "";
-
-    position: absolute;
-
-    left: -50%;
-    top: 0;
-
-    width: 50%;
-    height: 100%;
-
-    border-radius: inherit;
-
-    background: #2879d8;
-
-    animation: loadingMove 1.1s ease-in-out infinite;
-}
-
-@keyframes loadingMove {
-    0% {
-        left: -50%;
+function renderActivities(activities) {
+    updateCounts(activities.length);
+
+    if (!activities.length) {
+        activitiesContainer.innerHTML = "";
+        if (emptyState) emptyState.hidden = false;
+        return;
     }
 
-    100% {
-        left: 100%;
+    if (emptyState) emptyState.hidden = true;
+
+    activitiesContainer.innerHTML = activities.map((activity, index) => `
+        <article class="activity-card" data-id="${Number(activity.id)}">
+            <div class="activity-card-top">
+                <span class="activity-category">
+                    ${escapeHTML((activity.category || "Activity").toUpperCase())}
+                </span>
+                <span class="activity-index">
+                    ${String(index + 1).padStart(2, "0")}
+                </span>
+            </div>
+
+            <h3>${escapeHTML(activity.title || "Untitled activity")}</h3>
+
+            <p>
+                ${escapeHTML(activity.description || "No description available.")}
+            </p>
+
+            <div class="activity-meta-grid">
+                <div class="activity-meta-cell">
+                    <span>DATE</span>
+                    <strong>${escapeHTML(formatDate(activity.date))}</strong>
+                </div>
+
+                <div class="activity-meta-cell">
+                    <span>TIME</span>
+                    <strong>${escapeHTML(formatTime(activity.time))}</strong>
+                </div>
+
+                <div class="activity-meta-cell">
+                    <span>VENUE</span>
+                    <strong>${escapeHTML(activity.venue || "—")}</strong>
+                </div>
+
+                <div class="activity-meta-cell">
+                    <span>CAPACITY</span>
+                    <strong>
+                        ${activity.max_participants
+                            ? `${Number(activity.max_participants)} seats`
+                            : "Open"}
+                    </strong>
+                </div>
+            </div>
+
+            <div class="activity-card-footer">
+                <span class="activity-organizer">
+                    ${escapeHTML(
+                        activity.organizer_name
+                            ? `By ${activity.organizer_name}`
+                            : "OnCampus"
+                    )}
+                </span>
+
+                <span class="view-activity">View details →</span>
+            </div>
+        </article>
+    `).join("");
+
+    activitiesContainer.querySelectorAll(".activity-card").forEach(card => {
+        card.addEventListener("click", () => {
+            window.location.href =
+                `activity.html?id=${encodeURIComponent(card.dataset.id)}`;
+        });
+    });
+}
+
+function applyFilters() {
+    const query = (searchInput?.value || "").trim().toLowerCase();
+    const category = (categoryFilter?.value || "").toLowerCase();
+
+    const filtered = allActivities.filter(activity => {
+        const searchable = [
+            activity.title,
+            activity.description,
+            activity.category,
+            activity.venue,
+            activity.eligibility,
+            activity.organizer_name
+        ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+
+        const matchesSearch = !query || searchable.includes(query);
+        const matchesCategory =
+            !category ||
+            String(activity.category || "").toLowerCase() === category;
+
+        return matchesSearch && matchesCategory;
+    });
+
+    renderActivities(filtered);
+}
+
+async function loadActivities() {
+    try {
+        const data = await apiFetch("/activities/");
+
+        allActivities = Array.isArray(data)
+            ? data
+            : Array.isArray(data.activities)
+                ? data.activities
+                : [];
+
+        populateCategories();
+        renderActivities(allActivities);
+    } catch (error) {
+        console.error("Activities error:", error);
+
+        activitiesContainer.innerHTML = `
+            <div class="discover-loading">
+                Unable to load activities. Please refresh the page.
+            </div>
+        `;
+
+        updateCounts(0);
+        showToast(error.message);
+    } finally {
+        hideLoader();
     }
 }
 
-
-/* =========================================================
-   EMPTY STATE
-   ========================================================= */
-
-.discover-empty {
-    padding: 70px 30px;
-
-    border: 1px solid #e1e8ef;
-    border-radius: 20px;
-
-    background: #ffffff;
-
-    text-align: center;
-
-    box-shadow:
-        0 12px 35px rgba(
-            7,
-            21,
-            34,
-            0.045
-        );
-}
-
-.discover-empty-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 64px;
-    height: 64px;
-
-    margin: 0 auto 20px;
-
-    border-radius: 18px;
-
-    background: #edf5ff;
-    color: #2879d8;
-
-    font-size: 27px;
-}
-
-.discover-empty > span {
-    color: #2879d8;
-
-    font-size: 9px;
-    font-weight: 900;
-    letter-spacing: 0.16em;
-}
-
-.discover-empty h3 {
-    margin: 10px 0 8px;
-
-    font-size: 25px;
-    letter-spacing: -0.025em;
-}
-
-.discover-empty p {
-    margin: 0 auto 22px;
-
-    max-width: 400px;
-
-    color: #7c8a97;
-
-    font-size: 13px;
-    line-height: 1.6;
-}
-
-
-/* =========================================================
-   TOAST
-   ========================================================= */
-
-.activities-toast {
-    position: fixed;
-
-    right: 25px;
-    bottom: 25px;
-
-    z-index: 9999;
-
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    min-width: 245px;
-
-    padding: 14px 17px;
-
-    border: 1px solid rgba(
-        255,
-        255,
-        255,
-        0.08
-    );
-
-    border-radius: 13px;
-
-    background: #071522;
-    color: #ffffff;
-
-    box-shadow:
-        0 18px 50px rgba(
-            0,
-            0,
-            0,
-            0.2
-        );
-
-    opacity: 0;
-    transform: translateY(20px);
-
-    pointer-events: none;
-
-    transition:
-        opacity 0.25s ease,
-        transform 0.25s ease;
-}
-
-.activities-toast.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.activities-toast-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 30px;
-    height: 30px;
-
-    border-radius: 50%;
-
-    background: #2879d8;
-
-    font-size: 13px;
-    font-weight: 900;
-}
-
-.activities-toast strong {
-    display: block;
-
-    font-size: 12px;
-}
-
-.activities-toast span {
-    display: block;
-
-    margin-top: 2px;
-
-    color: #9db0c2;
-
-    font-size: 10px;
-}
-
-
-/* =========================================================
-   RESPONSIVE — TABLET
-   ========================================================= */
-
-@media (max-width: 900px) {
-
-    .discover-hero-inner {
-        min-height: 440px;
-
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: center;
-
-        gap: 35px;
-    }
-
-    .discover-hero-stat {
-        min-width: 170px;
-    }
-
-    .discover-filter-card {
-        grid-template-columns:
-            1fr 1fr;
-    }
-
-    .discover-search {
-        grid-column: 1 / -1;
-    }
-
-    .discover-clear {
-        width: 100%;
-    }
-
-    .discover-grid-list {
-        grid-template-columns: 1fr;
-    }
-
-}
-
-
-/* =========================================================
-   RESPONSIVE — MOBILE
-   ========================================================= */
-
-@media (max-width: 650px) {
-
-    .top-bar {
-        display: none;
-    }
-
-    .discover-hero {
-        min-height: 500px;
-    }
-
-    .discover-hero-inner {
-        width: min(
-            calc(100% - 32px),
-            1240px
-        );
-
-        min-height: 450px;
-
-        padding-top: 65px;
-    }
-
-    .discover-hero h1 {
-        font-size: 48px;
-    }
-
-    .discover-hero-copy p {
-        font-size: 14px;
-    }
-
-    .discover-hero-bottom {
-        width: calc(100% - 32px);
-
-        font-size: 8px;
-    }
-
-    .discover-hero-bottom span:last-child {
-        display: none;
-    }
-
-
-    .discover-main {
-        padding: 55px 0 80px;
-    }
-
-    .discover-main-inner {
-        width: calc(100% - 32px);
-    }
-
-
-    .discover-heading {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .discover-count {
-        padding-bottom: 0;
-    }
-
-
-    .discover-filter-card {
-        display: flex;
-        flex-direction: column;
-
-        padding: 9px;
-    }
-
-    .discover-search {
-        width: 100%;
-    }
-
-
-    .discover-activity-card {
-        min-height: 0;
-
-        padding: 20px;
-    }
-
-    .discover-card-title {
-        font-size: 22px;
-    }
-
-    .discover-card-info {
-        grid-template-columns: 1fr 1fr;
-    }
-
-
-    .discover-card-footer {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .discover-organizer {
-        max-width: 100%;
-    }
-
-    .discover-open {
-        align-self: flex-end;
-    }
-
-
-    .activities-toast {
-        right: 16px;
-        bottom: 16px;
-        left: 16px;
-
-        min-width: 0;
-    }
-
-}
-
-
-/* =========================================================
-   ACCESSIBILITY
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-    .discover-grid,
-    .discover-orb-one,
-    .discover-orb-two,
-    .discover-hero-stat,
-    .discover-activity-card,
-    .discover-activity-card::before,
-    .discover-activity-card::after,
-    .discover-open b,
-    .activities-toast {
-        animation: none !important;
-        transition: none !important;
-    }
-
-}
+searchInput?.addEventListener("input", applyFilters);
+categoryFilter?.addEventListener("change", applyFilters);
+
+clearSearchBtn?.addEventListener("click", () => {
+    searchInput.value = "";
+    applyFilters();
+});
+
+clearFiltersBtn?.addEventListener("click", () => {
+    searchInput.value = "";
+    categoryFilter.value = "";
+    renderActivities(allActivities);
+});
+
+emptyClearBtn?.addEventListener("click", () => {
+    searchInput.value = "";
+    categoryFilter.value = "";
+    renderActivities(allActivities);
+});
+
+logoutBtn?.addEventListener("click", () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
+});
+
+setupUser();
+loadActivities();

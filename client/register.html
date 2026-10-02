@@ -4,89 +4,391 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>OnCampus - Register</title>
+    <title>OnCampus — Create Account</title>
 
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
 </head>
 
 <body>
 
-    <div class="auth-container">
+    <!-- Background -->
+    <div class="auth-background">
+        <div class="grid"></div>
 
-        <div class="auth-card">
+        <div class="glow glow-blue"></div>
+        <div class="glow glow-orange"></div>
 
-            <div class="logo">
-                OnCampus
-            </div>
-
-            <h1>Create Account</h1>
-
-            <p class="subtitle">
-                Join OnCampus and discover campus activities.
-            </p>
-
-            <form id="registerForm">
-
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-
-                    <input
-                        type="text"
-                        id="name"
-                        placeholder="Enter your full name"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email</label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        placeholder="Enter your email"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-
-                    <input
-                        type="password"
-                        id="password"
-                        placeholder="Create a password"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="role">Account Type</label>
-
-                    <select id="role">
-                        <option value="student">Student</option>
-                        <option value="organizer">Organizer</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="primary-btn">
-                    Create Account
-                </button>
-
-            </form>
-
-            <p id="message" class="message"></p>
-
-            <div class="auth-footer">
-                Already have an account?
-                <a href="index.html">Login</a>
-            </div>
-
-        </div>
-
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
     </div>
 
+
+    <!-- Main -->
+    <main class="auth-page">
+
+        <!-- Left Intro -->
+        <section class="auth-intro">
+
+            <div class="brand-pill">
+                <span class="live-dot"></span>
+                RTU KOTA • ONCAMPUS
+            </div>
+
+            <h1>
+                Be part of
+                <span>campus life.</span>
+            </h1>
+
+            <p>
+                Create your OnCampus account and discover
+                events, workshops, competitions and
+                opportunities around your college.
+            </p>
+
+
+            <div class="intro-points">
+
+                <div class="intro-point">
+
+                    <div class="point-icon">
+                        01
+                    </div>
+
+                    <div>
+                        <strong>Explore</strong>
+
+                        <span>
+                            Discover activities happening on campus.
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="intro-point">
+
+                    <div class="point-icon">
+                        02
+                    </div>
+
+                    <div>
+                        <strong>Connect</strong>
+
+                        <span>
+                            Take part in experiences beyond classes.
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="intro-point">
+
+                    <div class="point-icon">
+                        03
+                    </div>
+
+                    <div>
+                        <strong>Experience</strong>
+
+                        <span>
+                            Build memories, skills and connections.
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Register Panel -->
+        <section class="auth-panel">
+
+            <div class="login-card">
+
+                <!-- Brand -->
+                <div class="login-brand">
+
+                    <div class="logo-wrap">
+
+                        <img
+                            src="assets/oncampus-logo.png"
+                            alt="OnCampus"
+                        >
+
+                    </div>
+
+                    <div class="brand-caption">
+                        CAMPUS ACTIVITY PLATFORM
+                    </div>
+
+                </div>
+
+
+                <!-- Heading -->
+                <div class="login-heading">
+
+                    <span class="eyebrow">
+                        GET STARTED
+                    </span>
+
+                    <h2>
+                        Create account
+                    </h2>
+
+                    <p>
+                        Set up your account and start discovering
+                        what's happening on campus.
+                    </p>
+
+                </div>
+
+
+                <!-- Form -->
+                <form id="registerForm">
+
+                    <!-- Name -->
+                    <div class="form-group">
+
+                        <label for="name">
+                            Full name
+                        </label>
+
+                        <div class="input-wrap">
+
+                            <span class="input-icon">
+                                •
+                            </span>
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Email -->
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email address
+                        </label>
+
+                        <div class="input-wrap">
+
+                            <span class="input-icon">
+                                @
+                            </span>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="you@example.com"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Password -->
+                    <div class="form-group">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="input-wrap">
+
+                            <span class="input-icon">
+                                ●
+                            </span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Create a password"
+                                autocomplete="new-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="passwordToggle"
+                                aria-label="Show password"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Account Type -->
+                    <div class="form-group">
+
+                        <label for="role">
+                            Account type
+                        </label>
+
+                        <div class="input-wrap select-wrap">
+
+                            <span class="input-icon">
+                                ◆
+                            </span>
+
+                            <select
+                                id="role"
+                                name="role"
+                            >
+                                <option value="student">
+                                    Student
+                                </option>
+
+                                <option value="organizer">
+                                    Organizer
+                                </option>
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Submit -->
+                    <button
+                        type="submit"
+                        class="login-button"
+                    >
+
+                        <span>
+                            Create my account
+                        </span>
+
+                        <b>
+                            →
+                        </b>
+
+                    </button>
+
+                </form>
+
+
+                <!-- Message -->
+                <div
+                    id="message"
+                    class="message"
+                    role="alert"
+                ></div>
+
+
+                <!-- Divider -->
+                <div class="login-divider">
+                    <span>OR</span>
+                </div>
+
+
+                <!-- Login -->
+                <div class="register-box">
+
+                    <span>
+                        Already have an account?
+                    </span>
+
+                    <a href="index.html">
+                        Sign in
+                        <b>↗</b>
+                    </a>
+
+                </div>
+
+
+                <!-- Security -->
+                <div class="login-security">
+
+                    <span class="security-dot"></span>
+
+                    <span>
+                        Secure account creation
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer -->
+            <div class="auth-footer">
+
+                <span>
+                    © 2026 OnCampus
+                </span>
+
+                <span>
+                    Built for campus life
+                </span>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Existing registration logic -->
     <script src="js/register.js"></script>
+
+
+    <!-- Password visibility -->
+    <script>
+
+        const passwordInput =
+            document.getElementById("password");
+
+        const passwordToggle =
+            document.getElementById("passwordToggle");
+
+
+        if (passwordToggle && passwordInput) {
+
+            passwordToggle.addEventListener(
+                "click",
+                () => {
+
+                    const isPassword =
+                        passwordInput.type === "password";
+
+                    passwordInput.type =
+                        isPassword
+                            ? "text"
+                            : "password";
+
+                    passwordToggle.textContent =
+                        isPassword
+                            ? "Hide"
+                            : "Show";
+
+                }
+            );
+
+        }
+
+    </script>
 
 </body>
 </html>
