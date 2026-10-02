@@ -1,425 +1,200 @@
+/* =========================================================
+   ONCAMPUS — STUDENT DASHBOARD
+   ========================================================= */
+
+const API_BASE = "http://localhost:5001/api";
+
 const token = localStorage.getItem("token");
-const userData = localStorage.getItem("user");
 
-
-// =========================
-// CHECK LOGIN
-// =========================
-
-if (!token || !userData) {
+if (!token) {
     window.location.href = "index.html";
 }
 
 
-// =========================
-// USER DATA
-// =========================
+/* =========================================================
+   DOM ELEMENTS
+   ========================================================= */
 
-const user = JSON.parse(userData);
+const pageLoader = document.getElementById("pageLoader");
 
+const studentName = document.getElementById("studentName");
+const userInitial = document.getElementById("userInitial");
 
-// =========================
-// CHECK STUDENT ROLE
-// =========================
+const logoutBtn = document.getElementById("logoutBtn");
 
-if (user.role !== "student") {
-    alert("Student access required");
-    window.location.href = "index.html";
-}
+const notificationShortcutBtn =
+    document.getElementById("notificationShortcutBtn");
 
+const notificationBadge =
+    document.getElementById("notificationBadge");
 
-// =========================
-// DISPLAY USER NAME
-// =========================
+const notificationSection =
+    document.getElementById("notificationSection");
 
-document.getElementById("studentName").textContent =
-    user.name;
+const notificationsContainer =
+    document.getElementById("notificationsContainer");
 
-document.getElementById("welcomeName").textContent =
-    user.name;
+const markAllReadBtn =
+    document.getElementById("markAllReadBtn");
 
+const activitiesContainer =
+    document.getElementById("activitiesContainer");
 
-// =========================
-// LOGOUT
-// =========================
+const activityCount =
+    document.getElementById("activityCount");
 
-document.getElementById("logoutBtn").addEventListener(
-    "click",
-    () => {
+const heroActivityCount =
+    document.getElementById("heroActivityCount");
 
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-
-        window.location.href = "index.html";
-
-    }
-);
-
-
-// =========================
-// ACTIVITIES
-// =========================
-
-let allActivities = [];
-
-
-// SEARCH INPUT
+const registrationsContainer =
+    document.getElementById("registrationsContainer");
 
 const searchInput =
     document.getElementById("searchInput");
 
-
-// CATEGORY FILTER
-
 const categoryFilter =
     document.getElementById("categoryFilter");
 
-
-// CLEAR FILTER BUTTON
+const clearSearchBtn =
+    document.getElementById("clearSearchBtn");
 
 const clearFiltersBtn =
     document.getElementById("clearFiltersBtn");
 
+const exploreBtn =
+    document.getElementById("exploreBtn");
 
-// SEARCH
+const myEventsBtn =
+    document.getElementById("myEventsBtn");
 
-searchInput.addEventListener(
-    "input",
-    applyFilters
-);
+const announcementText =
+    document.getElementById("announcementText");
 
+const announcementNext =
+    document.getElementById("announcementNext");
 
-// CATEGORY FILTER
-
-categoryFilter.addEventListener(
-    "change",
-    applyFilters
-);
-
-
-// CLEAR FILTERS
-
-clearFiltersBtn.addEventListener(
-    "click",
-    () => {
-
-        searchInput.value = "";
-
-        categoryFilter.value = "";
-
-        applyFilters();
-
-    }
-);
+const heroChangingText =
+    document.getElementById("heroChangingText");
 
 
-// =========================
-// LOAD ACTIVITIES
-// =========================
+/* =========================================================
+   DATA
+   ========================================================= */
 
-async function loadActivities() {
+let allActivities = [];
+let myRegistrations = [];
+let notifications = [];
 
-    const container =
-        document.getElementById(
-            "activitiesContainer"
-        );
+let currentAnnouncement = 0;
 
+const announcementMessages = [
+    "Discover what's happening on campus.",
+    "Find workshops, competitions and campus events.",
+    "Register for activities in just a few clicks.",
+    "Stay connected with campus life.",
+    "Your next campus experience starts here."
+];
+
+const heroPhrases = [
+    "on your campus.",
+    "at RTU Kota.",
+    "where you belong.",
+    "worth being part of.",
+    "waiting to be discovered.",
+    "where campus life happens."
+];
+
+
+/* =========================================================
+   API REQUEST
+   ========================================================= */
+
+async function apiRequest(url, options = {}) {
+
+    const response = await fetch(
+        `${API_BASE}${url}`,
+        {
+            ...options,
+
+            headers: {
+                "Content-Type": "application/json",
+
+                Authorization: `Bearer ${token}`,
+
+                ...(options.headers || {})
+            }
+        }
+    );
+
+    let data = {};
 
     try {
-
-        const response =
-            await fetch(
-                "http://localhost:5001/api/activities"
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            container.innerHTML =
-                `<p class="error">
-                    ${data.message ||
-                    "Unable to load activities"}
-                </p>`;
-
-            return;
-        }
-
-
-        allActivities =
-            data.activities || [];
-
-
-        applyFilters();
-
-
+        data = await response.json();
     } catch (error) {
-
-        console.error(
-            "Activities error:",
-            error
-        );
-
-
-        container.innerHTML =
-            `<p class="error">
-                Unable to load activities.
-            </p>`;
+        data = {};
     }
-}
-
-
-// =========================
-// APPLY FILTERS
-// =========================
-
-function applyFilters() {
-
-    const searchText =
-        searchInput.value
-            .trim()
-            .toLowerCase();
-
-
-    const selectedCategory =
-        categoryFilter.value;
-
-
-    const filteredActivities =
-        allActivities.filter(
-            (activity) => {
-
-                const title =
-                    activity.title
-                        .toLowerCase();
-
-
-                const description =
-                    (
-                        activity.description ||
-                        ""
-                    ).toLowerCase();
-
-
-                const category =
-                    activity.category
-                        .toLowerCase();
-
-
-                const venue =
-                    activity.venue
-                        .toLowerCase();
-
-
-                const matchesSearch =
-                    title.includes(searchText) ||
-                    description.includes(searchText) ||
-                    category.includes(searchText) ||
-                    venue.includes(searchText);
-
-
-                const matchesCategory =
-                    !selectedCategory ||
-                    activity.category ===
-                        selectedCategory;
-
-
-                return (
-                    matchesSearch &&
-                    matchesCategory
-                );
-
-            }
-        );
-
-
-    displayActivities(
-        filteredActivities
-    );
-}
-
-
-// =========================
-// DISPLAY ACTIVITIES
-// =========================
-
-function displayActivities(
-    activities
-) {
-
-    const container =
-        document.getElementById(
-            "activitiesContainer"
-        );
-
 
     if (
-        !activities ||
-        activities.length === 0
+        response.status === 401 ||
+        response.status === 403
     ) {
 
-        container.innerHTML = `
-            <div class="empty">
+        localStorage.removeItem("token");
 
-                <p>
-                    No activities found.
-                </p>
+        window.location.href = "index.html";
 
-                <span>
-                    Try changing your search or filter.
-                </span>
-
-            </div>
-        `;
-
-        return;
+        return null;
     }
 
+    if (!response.ok) {
 
-    container.innerHTML = "";
+        throw new Error(
+            data.message ||
+            "Something went wrong"
+        );
+    }
 
-
-    activities.forEach(
-        (activity) => {
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-
-            card.className =
-                "activity-card";
-
-
-            const formattedDate =
-                formatDate(
-                    activity.date
-                );
-
-
-            card.innerHTML = `
-
-                <div class="activity-category">
-                    ${activity.category}
-                </div>
-
-                <h3>
-                    ${activity.title}
-                </h3>
-
-                <p class="activity-description">
-                    ${activity.description ||
-                    "No description available."}
-                </p>
-
-
-                <div class="activity-info">
-
-                    <div>
-                        📅 ${formattedDate}
-                    </div>
-
-                    <div>
-                        🕐 ${activity.time}
-                    </div>
-
-                    <div>
-                        📍 ${activity.venue}
-                    </div>
-
-                </div>
-
-
-                <div class="activity-footer">
-
-                    <span>
-                        Organized by
-                        ${activity.organizer_name}
-                    </span>
-
-
-                    <button
-                        class="register-btn"
-                        onclick="
-                            event.stopPropagation();
-                            registerForActivity(${activity.id})
-                        "
-                    >
-                        Register
-                    </button>
-
-                </div>
-
-            `;
-
-
-            card.addEventListener(
-                "click",
-                () => {
-
-                    window.location.href =
-                        `activity.html?id=${activity.id}`;
-
-                }
-            );
-
-
-            container.appendChild(card);
-
-        }
-    );
+    return data;
 }
 
 
-// =========================
-// FORMAT DATE
-// =========================
+/* =========================================================
+   DATE FORMAT
+   ========================================================= */
 
 function formatDate(dateValue) {
 
-    const dateParts =
-        String(dateValue)
-            .split("T")[0]
-            .split("-");
-
-
-    if (dateParts.length !== 3) {
-
-        return new Date(
-            dateValue
-        ).toLocaleDateString(
-            "en-IN",
-            {
-                day: "numeric",
-                month: "short",
-                year: "numeric"
-            }
-        );
-
+    if (!dateValue) {
+        return "Date not available";
     }
 
+    const value =
+        String(dateValue).slice(0, 10);
+
+    const parts =
+        value.split("-");
+
+    if (parts.length !== 3) {
+        return value;
+    }
 
     const year =
-        Number(dateParts[0]);
-
+        Number(parts[0]);
 
     const month =
-        Number(dateParts[1]) - 1;
-
+        Number(parts[1]) - 1;
 
     const day =
-        Number(dateParts[2]);
+        Number(parts[2]);
 
+    const date =
+        new Date(
+            year,
+            month,
+            day
+        );
 
-    return new Date(
-        year,
-        month,
-        day
-    ).toLocaleDateString(
+    return date.toLocaleDateString(
         "en-IN",
         {
             day: "numeric",
@@ -430,239 +205,846 @@ function formatDate(dateValue) {
 }
 
 
-// =========================
-// REGISTER FOR ACTIVITY
-// =========================
+/* =========================================================
+   TIME FORMAT
+   ========================================================= */
 
-async function registerForActivity(
-    activityId
-) {
+function formatTime(timeValue) {
+
+    if (!timeValue) {
+        return "Time not available";
+    }
+
+    const value =
+        String(timeValue);
+
+    const parts =
+        value.split(":");
+
+    if (parts.length < 2) {
+        return value;
+    }
+
+    let hours =
+        Number(parts[0]);
+
+    const minutes =
+        parts[1];
+
+    const suffix =
+        hours >= 12
+            ? "PM"
+            : "AM";
+
+    hours =
+        hours % 12;
+
+    if (hours === 0) {
+        hours = 12;
+    }
+
+    return `${hours}:${minutes} ${suffix}`;
+}
+
+
+/* =========================================================
+   RELATIVE TIME
+   ========================================================= */
+
+function formatRelativeTime(dateValue) {
+
+    if (!dateValue) {
+        return "";
+    }
+
+    const date =
+        new Date(dateValue);
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+        return "";
+    }
+
+    const now =
+        new Date();
+
+    const difference =
+        Math.floor(
+            (
+                now.getTime() -
+                date.getTime()
+            ) / 1000
+        );
+
+    if (difference < 10) {
+        return "Just now";
+    }
+
+    if (difference < 60) {
+        return `${difference}s ago`;
+    }
+
+    const minutes =
+        Math.floor(
+            difference / 60
+        );
+
+    if (minutes < 60) {
+        return `${minutes}m ago`;
+    }
+
+    const hours =
+        Math.floor(
+            minutes / 60
+        );
+
+    if (hours < 24) {
+        return `${hours}h ago`;
+    }
+
+    const days =
+        Math.floor(
+            hours / 24
+        );
+
+    if (days < 7) {
+        return `${days}d ago`;
+    }
+
+    return date.toLocaleDateString(
+        "en-IN",
+        {
+            day: "numeric",
+            month: "short"
+        }
+    );
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+   ========================================================= */
+
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+        return "";
+    }
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+/* =========================================================
+   LOAD USER
+   ========================================================= */
+
+async function loadCurrentUser() {
 
     try {
 
-        const response =
-            await fetch(
-                `http://localhost:5001/api/registrations/${activityId}`,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Authorization":
-                            `Bearer ${token}`
-                    }
-                }
-            );
-
-
         const data =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            alert(
-                data.message ||
-                "Registration failed"
+            await apiRequest(
+                "/auth/me"
             );
 
+        if (!data) {
             return;
         }
 
+        const user =
+            data.user ||
+            data;
 
-        alert(
-            "Registration successful!"
-        );
+        const name =
+            user.name ||
+            "Student";
 
 
-        loadActivities();
+        if (studentName) {
 
-        loadRegistrations();
+            studentName.textContent =
+                name;
+        }
 
-        loadNotifications();
 
+        if (userInitial) {
+
+            userInitial.textContent =
+                name
+                    .trim()
+                    .charAt(0)
+                    .toUpperCase();
+        }
 
     } catch (error) {
 
         console.error(
-            "Registration error:",
+            "Load user error:",
             error
-        );
-
-
-        alert(
-            "Unable to connect to server"
         );
     }
 }
 
 
-// =========================
-// LOAD MY REGISTRATIONS
-// =========================
+/* =========================================================
+   LOAD ACTIVITIES
+   ========================================================= */
 
-async function loadRegistrations() {
+async function loadActivities() {
 
-    const container =
-        document.getElementById(
-            "registrationsContainer"
-        );
+    if (!activitiesContainer) {
+        return;
+    }
 
+    activitiesContainer.innerHTML = `
+        <div class="loading">
+            Loading activities...
+        </div>
+    `;
 
     try {
 
-        const response =
-            await fetch(
-                "http://localhost:5001/api/registrations/my",
-                {
-                    headers: {
-                        "Authorization":
-                            `Bearer ${token}`
-                    }
-                }
+        const data =
+            await apiRequest(
+                "/activities"
             );
 
+        allActivities =
+            Array.isArray(data)
+                ? data
+                : data.activities || [];
 
-        const data =
-            await response.json();
+        updateActivityCounts();
 
+        renderActivities();
 
-        if (!response.ok) {
+        updateAnnouncement();
 
-            container.innerHTML =
-                `<p class="error">
-                    ${data.message}
-                </p>`;
+    } catch (error) {
 
-            return;
-        }
+        console.error(
+            "Load activities error:",
+            error
+        );
 
+        activitiesContainer.innerHTML = `
+            <div class="empty-state">
+                <strong>
+                    Unable to load activities
+                </strong>
 
-        if (
-            !data.registrations ||
-            data.registrations.length === 0
-        ) {
-
-            container.innerHTML = `
-                <p class="empty">
-                    You haven't registered for any activities yet.
+                <p>
+                    Please make sure the OnCampus server is running.
                 </p>
-            `;
-
-            return;
-        }
-
-
-        container.innerHTML = "";
+            </div>
+        `;
+    }
+}
 
 
-        data.registrations.forEach(
-            (registration) => {
+/* =========================================================
+   ACTIVITY COUNTS
+   ========================================================= */
 
-                const item =
-                    document.createElement(
-                        "div"
+function updateActivityCounts() {
+
+    const count =
+        allActivities.length;
+
+    if (activityCount) {
+        activityCount.textContent =
+            count;
+    }
+
+    if (heroActivityCount) {
+        heroActivityCount.textContent =
+            count;
+    }
+}
+
+
+/* =========================================================
+   RENDER ACTIVITIES
+   ========================================================= */
+
+function renderActivities() {
+
+    if (!activitiesContainer) {
+        return;
+    }
+
+    const searchTerm =
+        searchInput
+            ? searchInput.value
+                .trim()
+                .toLowerCase()
+            : "";
+
+    const selectedCategory =
+        categoryFilter
+            ? categoryFilter.value
+            : "";
+
+
+    const filtered =
+        allActivities.filter(
+            activity => {
+
+                const title =
+                    String(
+                        activity.title || ""
+                    ).toLowerCase();
+
+                const description =
+                    String(
+                        activity.description || ""
+                    ).toLowerCase();
+
+                const category =
+                    String(
+                        activity.category || ""
                     );
 
 
-                item.className =
-                    "registration-card";
+                const matchesSearch =
+                    !searchTerm ||
+                    title.includes(searchTerm) ||
+                    description.includes(searchTerm) ||
+                    category
+                        .toLowerCase()
+                        .includes(searchTerm);
 
 
-                const formattedDate =
-                    formatDate(
-                        registration.date
-                    );
+                const matchesCategory =
+                    !selectedCategory ||
+                    category === selectedCategory;
 
 
-                const isRegistered =
-                    registration.status ===
-                    "registered";
-
-
-                item.innerHTML = `
-
-                    <div class="registration-info">
-
-                        <h3>
-                            ${registration.title}
-                        </h3>
-
-                        <p>
-                            ${registration.category}
-                        </p>
-
-                        <p>
-                            📅 ${formattedDate}
-
-                            &nbsp;&nbsp;
-
-                            📍 ${registration.venue}
-                        </p>
-
-                    </div>
-
-
-                    <div class="registration-actions">
-
-                        <div class="registration-status">
-                            ${registration.status}
-                        </div>
-
-
-                        ${
-                            isRegistered
-                            ? `
-                                <button
-                                    class="cancel-btn"
-                                    onclick="
-                                        cancelRegistration(
-                                            ${registration.activity_id}
-                                        )
-                                    "
-                                >
-                                    Cancel
-                                </button>
-                              `
-                            : ""
-                        }
-
-                    </div>
-
-                `;
-
-
-                container.appendChild(item);
-
+                return (
+                    matchesSearch &&
+                    matchesCategory
+                );
             }
         );
 
 
+    if (activityCount) {
+
+        activityCount.textContent =
+            filtered.length;
+    }
+
+
+    if (filtered.length === 0) {
+
+        activitiesContainer.innerHTML = `
+            <div class="empty-state">
+
+                <strong>
+                    No activities found
+                </strong>
+
+                <p>
+                    Try another search or category.
+                </p>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    activitiesContainer.innerHTML =
+        filtered
+            .map(
+                activity =>
+                    createActivityCard(
+                        activity
+                    )
+            )
+            .join("");
+}
+
+
+/* =========================================================
+   ACTIVITY CARD
+   ========================================================= */
+
+function createActivityCard(activity) {
+
+    const id =
+        Number(activity.id);
+
+    const title =
+        escapeHtml(
+            activity.title
+        );
+
+    const description =
+        escapeHtml(
+            activity.description ||
+            "No description available."
+        );
+
+    const category =
+        escapeHtml(
+            activity.category ||
+            "Activity"
+        );
+
+    const date =
+        formatDate(
+            activity.date
+        );
+
+    const time =
+        formatTime(
+            activity.time
+        );
+
+    const venue =
+        escapeHtml(
+            activity.venue ||
+            "Venue not specified"
+        );
+
+    const eligibility =
+        escapeHtml(
+            activity.eligibility ||
+            "All students"
+        );
+
+
+    const registered =
+        myRegistrations.some(
+            registration =>
+                Number(
+                    registration.activity_id
+                ) === id &&
+                registration.status !==
+                    "cancelled"
+        );
+
+
+    return `
+        <article
+            class="activity-card"
+            data-activity-id="${id}"
+        >
+
+            <span class="activity-category">
+                ${category}
+            </span>
+
+
+            <h3 class="activity-title">
+                ${title}
+            </h3>
+
+
+            <p class="activity-description">
+                ${description}
+            </p>
+
+
+            <div class="activity-meta">
+
+                <div class="activity-meta-item">
+
+                    <span>
+                        Date
+                    </span>
+
+                    <strong>
+                        ${date}
+                    </strong>
+
+                </div>
+
+
+                <div class="activity-meta-item">
+
+                    <span>
+                        Time
+                    </span>
+
+                    <strong>
+                        ${time}
+                    </strong>
+
+                </div>
+
+
+                <div class="activity-meta-item">
+
+                    <span>
+                        Venue
+                    </span>
+
+                    <strong>
+                        ${venue}
+                    </strong>
+
+                </div>
+
+
+                <div class="activity-meta-item">
+
+                    <span>
+                        Eligibility
+                    </span>
+
+                    <strong>
+                        ${eligibility}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="activity-actions">
+
+                <button
+                    class="activity-view-btn"
+                    type="button"
+                    onclick="viewActivity(${id})"
+                >
+                    View details
+                </button>
+
+
+                <button
+                    class="activity-register-btn"
+                    type="button"
+                    onclick="registerActivity(${id})"
+                    ${registered ? "disabled" : ""}
+                >
+                    ${
+                        registered
+                            ? "Registered"
+                            : "Register"
+                    }
+                </button>
+
+            </div>
+
+        </article>
+    `;
+}
+
+
+/* =========================================================
+   VIEW ACTIVITY
+   ========================================================= */
+
+function viewActivity(activityId) {
+
+    window.location.href =
+        `activity.html?id=${activityId}`;
+}
+
+
+/* =========================================================
+   REGISTER
+   ========================================================= */
+
+async function registerActivity(activityId) {
+
+    const button =
+        document.querySelector(
+            `[data-activity-id="${activityId}"] .activity-register-btn`
+        );
+
+
+    if (button) {
+
+        button.disabled = true;
+
+        button.textContent =
+            "Registering...";
+    }
+
+
+    try {
+
+        await apiRequest(
+            `/registrations/${activityId}`,
+            {
+                method: "POST"
+            }
+        );
+
+
+        await Promise.all([
+            loadRegistrations(),
+            loadNotifications()
+        ]);
+
+
+        renderActivities();
+
+
+        showToast(
+            "Successfully registered for the activity."
+        );
+
     } catch (error) {
 
         console.error(
-            "Registrations error:",
+            "Register activity error:",
             error
         );
 
 
-        container.innerHTML =
-            `<p class="error">
-                Unable to load registrations.
-            </p>`;
+        if (button) {
+
+            button.disabled = false;
+
+            button.textContent =
+                "Register";
+        }
+
+
+        showToast(
+            error.message ||
+            "Unable to register."
+        );
     }
 }
 
 
-// =========================
-// CANCEL REGISTRATION
-// =========================
+/* =========================================================
+   LOAD REGISTRATIONS
+   ========================================================= */
+
+async function loadRegistrations() {
+
+    if (!registrationsContainer) {
+        return;
+    }
+
+    registrationsContainer.innerHTML = `
+        <div class="loading">
+            Loading registrations...
+        </div>
+    `;
+
+
+    try {
+
+        const data =
+            await apiRequest(
+                "/registrations/my"
+            );
+
+
+        myRegistrations =
+            Array.isArray(data)
+                ? data
+                : data.registrations || [];
+
+
+        renderRegistrations();
+
+
+    } catch (error) {
+
+        console.error(
+            "Load registrations error:",
+            error
+        );
+
+
+        registrationsContainer.innerHTML = `
+            <div class="empty-state">
+
+                <strong>
+                    Unable to load registrations
+                </strong>
+
+                <p>
+                    Please try again.
+                </p>
+
+            </div>
+        `;
+    }
+}
+
+
+/* =========================================================
+   RENDER REGISTRATIONS
+   ========================================================= */
+
+function renderRegistrations() {
+
+    if (!registrationsContainer) {
+        return;
+    }
+
+
+    if (myRegistrations.length === 0) {
+
+        registrationsContainer.innerHTML = `
+            <div class="empty-state">
+
+                <strong>
+                    No registrations yet
+                </strong>
+
+                <p>
+                    Explore campus activities and join something interesting.
+                </p>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    registrationsContainer.innerHTML =
+        myRegistrations
+            .map(
+                registration =>
+                    createRegistrationCard(
+                        registration
+                    )
+            )
+            .join("");
+}
+
+
+/* =========================================================
+   REGISTRATION CARD
+   ========================================================= */
+
+function createRegistrationCard(
+    registration
+) {
+
+    const activityTitle =
+        escapeHtml(
+            registration.activity_title ||
+            registration.title ||
+            "Campus activity"
+        );
+
+
+    const date =
+        formatDate(
+            registration.activity_date ||
+            registration.date
+        );
+
+
+    const time =
+        formatTime(
+            registration.activity_time ||
+            registration.time
+        );
+
+
+    const venue =
+        escapeHtml(
+            registration.venue ||
+            "Venue not available"
+        );
+
+
+    const status =
+        String(
+            registration.status ||
+            "registered"
+        ).toLowerCase();
+
+
+    const activityId =
+        Number(
+            registration.activity_id ||
+            registration.id
+        );
+
+
+    return `
+        <article
+            class="registration-card"
+        >
+
+            <h3>
+                ${activityTitle}
+            </h3>
+
+
+            <span
+                class="registration-status"
+            >
+                ${escapeHtml(status)}
+            </span>
+
+
+            <div
+                class="registration-meta"
+            >
+
+                <span>
+                    📅 ${date}
+                </span>
+
+                <span>
+                    🕒 ${time}
+                </span>
+
+                <span>
+                    📍 ${venue}
+                </span>
+
+            </div>
+
+
+            ${
+                status === "registered"
+                    ? `
+                        <button
+                            class="registration-cancel-btn"
+                            type="button"
+                            onclick="cancelRegistration(${activityId})"
+                        >
+                            Cancel registration
+                        </button>
+                    `
+                    : ""
+            }
+
+        </article>
+    `;
+}
+
+
+/* =========================================================
+   CANCEL REGISTRATION
+   ========================================================= */
 
 async function cancelRegistration(
     activityId
 ) {
 
     const confirmed =
-        confirm(
+        window.confirm(
             "Are you sure you want to cancel this registration?"
         );
 
@@ -674,45 +1056,26 @@ async function cancelRegistration(
 
     try {
 
-        const response =
-            await fetch(
-                `http://localhost:5001/api/registrations/${activityId}/cancel`,
-                {
-                    method: "PUT",
-
-                    headers: {
-                        "Authorization":
-                            `Bearer ${token}`
-                    }
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            alert(
-                data.message ||
-                "Unable to cancel registration"
-            );
-
-            return;
-        }
-
-
-        alert(
-            "Registration cancelled successfully."
+        await apiRequest(
+            `/registrations/${activityId}/cancel`,
+            {
+                method: "PUT"
+            }
         );
 
 
-        loadRegistrations();
+        await Promise.all([
+            loadRegistrations(),
+            loadNotifications()
+        ]);
 
-        loadActivities();
 
-        loadNotifications();
+        renderActivities();
+
+
+        showToast(
+            "Registration cancelled."
+        );
 
 
     } catch (error) {
@@ -723,213 +1086,257 @@ async function cancelRegistration(
         );
 
 
-        alert(
-            "Unable to connect to server"
+        showToast(
+            error.message ||
+            "Unable to cancel registration."
         );
     }
 }
 
 
-// =========================
-// LOAD NOTIFICATIONS
-// =========================
+/* =========================================================
+   LOAD NOTIFICATIONS
+   ========================================================= */
 
 async function loadNotifications() {
 
-    const container =
-        document.getElementById(
-            "notificationsContainer"
-        );
+    if (!notificationsContainer) {
+        return;
+    }
 
 
     try {
 
-        const response =
-            await fetch(
-                "http://localhost:5001/api/notifications/my",
-                {
-                    headers: {
-                        "Authorization":
-                            `Bearer ${token}`
-                    }
-                }
+        const data =
+            await apiRequest(
+                "/notifications/my"
             );
 
 
-        const data =
-            await response.json();
+        notifications =
+            Array.isArray(data)
+                ? data
+                : data.notifications || [];
 
 
-        if (!response.ok) {
-
-            container.innerHTML =
-                `<p class="error">
-                    ${data.message ||
-                    "Unable to load notifications"}
-                </p>`;
-
-            return;
-        }
-
-
-        const notifications =
-            data.notifications || [];
-
-
-        if (notifications.length === 0) {
-
-            container.innerHTML = `
-                <div class="empty">
-
-                    <p>
-                        No notifications yet.
-                    </p>
-
-                </div>
-            `;
-
-            return;
-        }
-
-
-        container.innerHTML = "";
-
-
-        notifications.forEach(
-            (notification) => {
-
-                const item =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                item.className =
-                    "notification-card";
-
-
-                if (!notification.is_read) {
-
-                    item.classList.add(
-                        "unread"
-                    );
-
-                }
-
-
-                const createdDate =
-                    new Date(
-                        notification.created_at
-                    ).toLocaleString(
-                        "en-IN",
-                        {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                            hour: "numeric",
-                            minute: "2-digit"
-                        }
-                    );
-
-
-                item.innerHTML = `
-
-                    <div class="notification-content">
-
-                        <div class="notification-title">
-
-                            <span class="notification-icon">
-                                🔔
-                            </span>
-
-                            ${
-                                notification.is_read
-                                ? ""
-                                : `
-                                    <span class="unread-dot"></span>
-                                  `
-                            }
-
-                        </div>
-
-
-                        <div>
-
-                            <p class="notification-message">
-                                ${notification.message}
-                            </p>
-
-
-                            ${
-                                notification.activity_title
-                                ? `
-                                    <p class="notification-activity">
-                                        Activity:
-                                        ${notification.activity_title}
-                                    </p>
-                                  `
-                                : ""
-                            }
-
-
-                            <p class="notification-time">
-                                ${createdDate}
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    ${
-                        !notification.is_read
-                        ? `
-                            <button
-                                class="mark-read-btn"
-                                onclick="
-                                    markNotificationRead(
-                                        ${notification.id}
-                                    )
-                                "
-                            >
-                                Mark as read
-                            </button>
-                          `
-                        : `
-                            <span class="read-label">
-                                Read
-                            </span>
-                          `
-                    }
-
-                `;
-
-
-                container.appendChild(item);
-
-            }
-        );
+        renderNotifications();
 
 
     } catch (error) {
 
         console.error(
-            "Notifications error:",
+            "Load notifications error:",
             error
         );
 
 
-        container.innerHTML =
-            `<p class="error">
-                Unable to load notifications.
-            </p>`;
+        notificationsContainer.innerHTML = `
+            <div class="empty-state">
+
+                <strong>
+                    Unable to load notifications
+                </strong>
+
+                <p>
+                    Please try again.
+                </p>
+
+            </div>
+        `;
     }
 }
 
 
-// =========================
-// MARK ONE NOTIFICATION AS READ
-// =========================
+/* =========================================================
+   RENDER NOTIFICATIONS
+   ========================================================= */
+
+function renderNotifications() {
+
+    if (!notificationsContainer) {
+        return;
+    }
+
+
+    const unreadNotifications =
+        notifications.filter(
+            notification =>
+                !Boolean(
+                    notification.is_read
+                )
+        );
+
+
+    updateNotificationBadge(
+        unreadNotifications.length
+    );
+
+
+    if (
+        unreadNotifications.length === 0
+    ) {
+
+        notificationsContainer.innerHTML = `
+            <div class="empty-state">
+
+                <strong>
+                    You're all caught up
+                </strong>
+
+                <p>
+                    New important updates will appear here.
+                </p>
+
+            </div>
+        `;
+
+
+        if (markAllReadBtn) {
+            markAllReadBtn.style.display =
+                "none";
+        }
+
+
+        return;
+    }
+
+
+    if (markAllReadBtn) {
+        markAllReadBtn.style.display =
+            "block";
+    }
+
+
+    notificationsContainer.innerHTML =
+        unreadNotifications
+            .map(
+                notification =>
+                    createNotificationCard(
+                        notification
+                    )
+            )
+            .join("");
+}
+
+
+/* =========================================================
+   NOTIFICATION CARD
+   ========================================================= */
+
+function createNotificationCard(
+    notification
+) {
+
+    const message =
+        escapeHtml(
+            notification.message ||
+            "You have a new update."
+        );
+
+
+    const activityTitle =
+        escapeHtml(
+            notification.activity_title ||
+            "OnCampus"
+        );
+
+
+    const createdAt =
+        formatRelativeTime(
+            notification.created_at
+        );
+
+
+    const notificationId =
+        Number(
+            notification.id
+        );
+
+
+    return `
+        <article
+            class="notification-item"
+            data-notification-id="${notificationId}"
+        >
+
+            <div
+                class="notification-icon"
+            >
+                ✓
+            </div>
+
+
+            <div
+                class="notification-content"
+            >
+
+                <strong>
+                    ${activityTitle}
+                </strong>
+
+
+                <p>
+                    ${message}
+                </p>
+
+
+                <div
+                    class="notification-time"
+                >
+                    ${createdAt}
+                </div>
+
+            </div>
+
+
+            <button
+                class="notification-read-btn"
+                type="button"
+                onclick="markNotificationRead(${notificationId})"
+            >
+                Read
+            </button>
+
+        </article>
+    `;
+}
+
+
+/* =========================================================
+   NOTIFICATION BADGE
+   ========================================================= */
+
+function updateNotificationBadge(
+    count
+) {
+
+    if (!notificationBadge) {
+        return;
+    }
+
+
+    notificationBadge.textContent =
+        count;
+
+
+    if (count > 0) {
+
+        notificationBadge.classList.remove(
+            "hidden"
+        );
+
+    } else {
+
+        notificationBadge.classList.add(
+            "hidden"
+        );
+    }
+}
+
+
+/* =========================================================
+   MARK NOTIFICATION READ
+   ========================================================= */
 
 async function markNotificationRead(
     notificationId
@@ -937,120 +1344,830 @@ async function markNotificationRead(
 
     try {
 
-        const response =
-            await fetch(
-                `http://localhost:5001/api/notifications/${notificationId}/read`,
-                {
-                    method: "PUT",
+        await apiRequest(
+            `/notifications/${notificationId}/read`,
+            {
+                method: "PUT"
+            }
+        );
 
-                    headers: {
-                        "Authorization":
-                            `Bearer ${token}`
-                    }
-                }
+
+        notifications =
+            notifications.filter(
+                notification =>
+                    Number(
+                        notification.id
+                    ) !==
+                    Number(
+                        notificationId
+                    )
             );
 
 
-        const data =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            alert(
-                data.message ||
-                "Unable to mark notification as read"
-            );
-
-            return;
-        }
-
-
-        loadNotifications();
+        renderNotifications();
 
 
     } catch (error) {
 
         console.error(
-            "Mark notification error:",
+            "Mark notification read error:",
             error
         );
 
 
-        alert(
-            "Unable to connect to server"
+        showToast(
+            error.message ||
+            "Unable to update notification."
         );
     }
 }
 
 
-// =========================
-// MARK ALL NOTIFICATIONS AS READ
-// =========================
+/* =========================================================
+   MARK ALL READ
+   ========================================================= */
 
-document
-    .getElementById("markAllReadBtn")
-    .addEventListener(
-        "click",
-        async () => {
+async function markAllNotificationsRead() {
 
-            try {
+    try {
 
-                const response =
-                    await fetch(
-                        "http://localhost:5001/api/notifications/read-all",
-                        {
-                            method: "PUT",
-
-                            headers: {
-                                "Authorization":
-                                    `Bearer ${token}`
-                            }
-                        }
-                    );
+        await apiRequest(
+            "/notifications/read-all",
+            {
+                method: "PUT"
+            }
+        );
 
 
-                const data =
-                    await response.json();
+        notifications =
+            notifications.map(
+                notification => ({
+                    ...notification,
+                    is_read: true
+                })
+            );
 
 
-                if (!response.ok) {
+        renderNotifications();
 
-                    alert(
-                        data.message ||
-                        "Unable to mark notifications as read"
-                    );
 
-                    return;
+    } catch (error) {
+
+        console.error(
+            "Mark all notifications error:",
+            error
+        );
+
+
+        showToast(
+            error.message ||
+            "Unable to update notifications."
+        );
+    }
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+function handleSearch() {
+
+    renderActivities();
+
+
+    if (!clearSearchBtn) {
+        return;
+    }
+
+
+    if (
+        searchInput &&
+        searchInput.value.trim()
+    ) {
+
+        clearSearchBtn.classList.add(
+            "visible"
+        );
+
+    } else {
+
+        clearSearchBtn.classList.remove(
+            "visible"
+        );
+    }
+}
+
+
+/* =========================================================
+   CLEAR SEARCH
+   ========================================================= */
+
+function clearSearch() {
+
+    if (searchInput) {
+        searchInput.value = "";
+    }
+
+    handleSearch();
+}
+
+
+/* =========================================================
+   CLEAR FILTERS
+   ========================================================= */
+
+function clearFilters() {
+
+    if (searchInput) {
+        searchInput.value = "";
+    }
+
+
+    if (categoryFilter) {
+        categoryFilter.value = "";
+    }
+
+
+    handleSearch();
+}
+
+
+/* =========================================================
+   CATEGORY CARDS
+   ========================================================= */
+
+function setupCategoryCards() {
+
+    const categoryCards =
+        document.querySelectorAll(
+            ".category-card"
+        );
+
+
+    categoryCards.forEach(
+        card => {
+
+            card.addEventListener(
+                "click",
+                () => {
+
+                    const category =
+                        card.dataset.category;
+
+
+                    if (categoryFilter) {
+
+                        categoryFilter.value =
+                            category;
+                    }
+
+
+                    renderActivities();
+
+
+                    document
+                        .getElementById(
+                            "activities"
+                        )
+                        ?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start"
+                        });
                 }
+            );
+        }
+    );
+}
 
 
-                loadNotifications();
+/* =========================================================
+   ANNOUNCEMENT
+   ========================================================= */
+
+function updateAnnouncement() {
+
+    if (!announcementText) {
+        return;
+    }
 
 
-            } catch (error) {
+    if (allActivities.length > 0) {
 
-                console.error(
-                    "Mark all notifications error:",
-                    error
+        const activity =
+            allActivities[
+                currentAnnouncement %
+                allActivities.length
+            ];
+
+
+        announcementText.textContent =
+            `${activity.title} • ${formatDate(activity.date)} • ${formatTime(activity.time)}`;
+
+    } else {
+
+        announcementText.textContent =
+            announcementMessages[
+                currentAnnouncement %
+                announcementMessages.length
+            ];
+    }
+}
+
+
+/* =========================================================
+   NEXT ANNOUNCEMENT
+   ========================================================= */
+
+function nextAnnouncement() {
+
+    currentAnnouncement++;
+
+    updateAnnouncement();
+}
+
+
+/* =========================================================
+   HERO TYPING
+   ========================================================= */
+
+function startHeroTyping() {
+
+    if (!heroChangingText) {
+        return;
+    }
+
+
+    let phraseIndex = 0;
+
+    let characterIndex = 0;
+
+    let deleting = false;
+
+
+    function typeLoop() {
+
+        const phrase =
+            heroPhrases[
+                phraseIndex
+            ];
+
+
+        if (!deleting) {
+
+            characterIndex++;
+
+
+            heroChangingText.textContent =
+                phrase.substring(
+                    0,
+                    characterIndex
                 );
 
 
-                alert(
-                    "Unable to connect to server"
+            if (
+                characterIndex >=
+                phrase.length
+            ) {
+
+                deleting = true;
+
+
+                setTimeout(
+                    typeLoop,
+                    1800
                 );
+
+
+                return;
             }
 
+        } else {
+
+            characterIndex--;
+
+
+            heroChangingText.textContent =
+                phrase.substring(
+                    0,
+                    characterIndex
+                );
+
+
+            if (
+                characterIndex <= 0
+            ) {
+
+                deleting = false;
+
+
+                phraseIndex =
+                    (
+                        phraseIndex + 1
+                    ) %
+                    heroPhrases.length;
+
+
+                setTimeout(
+                    typeLoop,
+                    350
+                );
+
+
+                return;
+            }
+        }
+
+
+        setTimeout(
+            typeLoop,
+            deleting
+                ? 45
+                : 75
+        );
+    }
+
+
+    typeLoop();
+}
+
+
+/* =========================================================
+   SCROLL REVEAL
+   ========================================================= */
+
+function setupScrollReveal() {
+
+    const elements =
+        document.querySelectorAll(
+            ".reveal-section"
+        );
+
+
+    if (
+        !(
+            "IntersectionObserver"
+            in window
+        )
+    ) {
+
+        elements.forEach(
+            element =>
+                element.classList.add(
+                    "visible"
+                )
+        );
+
+        return;
+    }
+
+
+    const observer =
+        new IntersectionObserver(
+            entries => {
+
+                entries.forEach(
+                    entry => {
+
+                        if (
+                            entry.isIntersecting
+                        ) {
+
+                            entry.target.classList.add(
+                                "visible"
+                            );
+
+
+                            observer.unobserve(
+                                entry.target
+                            );
+                        }
+
+                    }
+                );
+
+            },
+            {
+                threshold: 0.12
+            }
+        );
+
+
+    elements.forEach(
+        element =>
+            observer.observe(
+                element
+            )
+    );
+}
+
+
+/* =========================================================
+   HERO REVEAL
+   ========================================================= */
+
+function setupHeroReveal() {
+
+    const elements =
+        document.querySelectorAll(
+            ".reveal-item"
+        );
+
+
+    elements.forEach(
+        element => {
+
+            const delay =
+                Number(
+                    element.dataset.delay ||
+                    0
+                );
+
+
+            setTimeout(
+                () => {
+
+                    element.classList.add(
+                        "visible"
+                    );
+
+                },
+                250 + delay
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   MAGNETIC BUTTONS
+   ========================================================= */
+
+function setupMagneticButtons() {
+
+    const buttons =
+        document.querySelectorAll(
+            ".magnetic-btn"
+        );
+
+
+    if (
+        window.matchMedia(
+            "(pointer: coarse)"
+        ).matches
+    ) {
+        return;
+    }
+
+
+    buttons.forEach(
+        button => {
+
+            button.addEventListener(
+                "mousemove",
+                event => {
+
+                    const rect =
+                        button.getBoundingClientRect();
+
+
+                    const x =
+                        event.clientX -
+                        rect.left -
+                        rect.width / 2;
+
+
+                    const y =
+                        event.clientY -
+                        rect.top -
+                        rect.height / 2;
+
+
+                    button.style.transform =
+                        `translate(${x * 0.08}px, ${y * 0.08}px)`;
+                }
+            );
+
+
+            button.addEventListener(
+                "mouseleave",
+                () => {
+
+                    button.style.transform =
+                        "";
+                }
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+function setupNavigation() {
+
+    if (exploreBtn) {
+
+        exploreBtn.addEventListener(
+            "click",
+            () => {
+
+                document
+                    .getElementById(
+                        "activities"
+                    )
+                    ?.scrollIntoView({
+                        behavior: "smooth"
+                    });
+            }
+        );
+    }
+
+
+    if (myEventsBtn) {
+
+        myEventsBtn.addEventListener(
+            "click",
+            () => {
+
+                document
+                    .getElementById(
+                        "registrations"
+                    )
+                    ?.scrollIntoView({
+                        behavior: "smooth"
+                    });
+            }
+        );
+    }
+
+
+    if (notificationShortcutBtn) {
+
+        notificationShortcutBtn.addEventListener(
+            "click",
+            () => {
+
+                notificationSection
+                    ?.scrollIntoView({
+                        behavior: "smooth"
+                    });
+            }
+        );
+    }
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+function setupLogout() {
+
+    if (!logoutBtn) {
+        return;
+    }
+
+
+    logoutBtn.addEventListener(
+        "click",
+        () => {
+
+            localStorage.removeItem(
+                "token"
+            );
+
+
+            window.location.href =
+                "index.html";
+        }
+    );
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+function showToast(message) {
+
+    const existing =
+        document.querySelector(
+            ".oncampus-toast"
+        );
+
+
+    if (existing) {
+        existing.remove();
+    }
+
+
+    const toast =
+        document.createElement(
+            "div"
+        );
+
+
+    toast.className =
+        "oncampus-toast";
+
+
+    toast.textContent =
+        message;
+
+
+    Object.assign(
+        toast.style,
+        {
+            position: "fixed",
+            right: "22px",
+            bottom: "22px",
+            zIndex: "99999",
+            maxWidth: "340px",
+            padding: "13px 17px",
+            borderRadius: "10px",
+            background: "#071522",
+            color: "#ffffff",
+            fontSize: "11px",
+            fontWeight: "700",
+            boxShadow:
+                "0 15px 40px rgba(0,0,0,.22)",
+            opacity: "0",
+            transform:
+                "translateY(12px)",
+            transition:
+                "all .3s ease"
         }
     );
 
 
-// =========================
-// INITIAL LOAD
-// =========================
+    document.body.appendChild(
+        toast
+    );
 
-loadActivities();
 
-loadRegistrations();
+    requestAnimationFrame(
+        () => {
 
-loadNotifications();
+            toast.style.opacity =
+                "1";
+
+            toast.style.transform =
+                "translateY(0)";
+        }
+    );
+
+
+    setTimeout(
+        () => {
+
+            toast.style.opacity =
+                "0";
+
+            toast.style.transform =
+                "translateY(12px)";
+
+
+            setTimeout(
+                () => toast.remove(),
+                300
+            );
+
+        },
+        2800
+    );
+}
+
+
+/* =========================================================
+   EVENT LISTENERS
+   ========================================================= */
+
+if (searchInput) {
+
+    searchInput.addEventListener(
+        "input",
+        handleSearch
+    );
+}
+
+
+if (categoryFilter) {
+
+    categoryFilter.addEventListener(
+        "change",
+        renderActivities
+    );
+}
+
+
+if (clearSearchBtn) {
+
+    clearSearchBtn.addEventListener(
+        "click",
+        clearSearch
+    );
+}
+
+
+if (clearFiltersBtn) {
+
+    clearFiltersBtn.addEventListener(
+        "click",
+        clearFilters
+    );
+}
+
+
+if (markAllReadBtn) {
+
+    markAllReadBtn.addEventListener(
+        "click",
+        markAllNotificationsRead
+    );
+}
+
+
+if (announcementNext) {
+
+    announcementNext.addEventListener(
+        "click",
+        nextAnnouncement
+    );
+}
+
+
+/* =========================================================
+   INITIALIZE DASHBOARD
+   ========================================================= */
+
+async function initializeDashboard() {
+
+    setupHeroReveal();
+
+    setupScrollReveal();
+
+    setupMagneticButtons();
+
+    setupNavigation();
+
+    setupLogout();
+
+    setupCategoryCards();
+
+    startHeroTyping();
+
+
+    await loadCurrentUser();
+
+
+    await Promise.all([
+        loadActivities(),
+        loadRegistrations(),
+        loadNotifications()
+    ]);
+
+
+    setTimeout(
+        () => {
+
+            if (pageLoader) {
+
+                pageLoader.classList.add(
+                    "hidden"
+                );
+            }
+
+        },
+        500
+    );
+}
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    initializeDashboard
+);
+
+
+/* =========================================================
+   GLOBAL FUNCTIONS
+   ========================================================= */
+
+window.viewActivity =
+    viewActivity;
+
+window.registerActivity =
+    registerActivity;
+
+window.cancelRegistration =
+    cancelRegistration;
+
+window.markNotificationRead =
+    markNotificationRead;
