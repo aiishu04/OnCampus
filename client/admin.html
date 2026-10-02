@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OnCampus - Admin Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <div class="navbar-brand">
+            OnCampus
+        </div>
+
+        <div class="navbar-right">
+
+            <span id="adminName">
+                Admin
+            </span>
+
+            <button id="logoutBtn" class="logout-btn">
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="dashboard-container">
+
+        <section class="welcome-section">
+
+            <h1>
+                Welcome, <span id="welcomeName">Admin</span> 👋
+            </h1>
+
+            <p>
+                Review and manage activities submitted by organizers.
+            </p>
+
+        </section>
+
+
+        <section class="dashboard-section">
+
+            <div class="section-header">
+
+                <h2>
+                    Pending Activities
+                </h2>
+
+                <p>
+                    Review activities before they are published to students.
+                </p>
+
+            </div>
+
+
+            <div
+                id="pendingActivities"
+                class="admin-activities"
+            >
+
+                <p class="loading">
+                    Loading pending activities...
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="js/admin.js"></script>
+
+</body>
+</html>

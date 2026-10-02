@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OnCampus - Organizer Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <div class="navbar-brand">
+            OnCampus
+        </div>
+
+        <div class="navbar-right">
+
+            <span id="organizerName">
+                Organizer
+            </span>
+
+            <button id="logoutBtn" class="logout-btn">
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="dashboard-container">
+
+        <section class="welcome-section">
+
+            <h1>
+                Welcome, <span id="welcomeName">Organizer</span> 👋
+            </h1>
+
+            <p>
+                Create and manage your campus activities.
+            </p>
+
+        </section>
+
+
+        <section class="dashboard-section">
+
+            <div class="section-header organizer-header">
+
+                <div>
+
+                    <h2>
+                        My Activities
+                    </h2>
+
+                    <p>
+                        Manage your activities and registrations.
+                    </p>
+
+                </div>
+
+                <button
+                    id="showCreateBtn"
+                    class="primary-btn create-btn"
+                >
+                    + Create Activity
+                </button>
+
+            </div>
+
+
+            <!-- CREATE ACTIVITY FORM -->
+
+            <div
+                id="createActivitySection"
+                class="create-activity-card hidden"
+            >
+
+                <div class="form-header">
+
+                    <h2>
+                        Create New Activity
+                    </h2>
+
+                    <button
+                        id="closeCreateBtn"
+                        class="close-btn"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <form id="activityForm">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="title">
+                                Activity Title
+                            </label>
+
+                            <input
+                                type="text"
+                                id="title"
+                                placeholder="e.g. Coding Workshop"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="category">
+                                Category
+                            </label>
+
+                            <select
+                                id="category"
+                                required
+                            >
+
+                                <option value="">
+                                    Select category
+                                </option>
+
+                                <option value="Workshop">
+                                    Workshop
+                                </option>
+
+                                <option value="Seminar">
+                                    Seminar
+                                </option>
+
+                                <option value="Competition">
+                                    Competition
+                                </option>
+
+                                <option value="Cultural">
+                                    Cultural
+                                </option>
+
+                                <option value="Sports">
+                                    Sports
+                                </option>
+
+                                <option value="Technical">
+                                    Technical
+                                </option>
+
+                                <option value="Other">
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+                            <label for="description">
+                                Description
+                            </label>
+
+                            <textarea
+                                id="description"
+                                placeholder="Describe the activity..."
+                                rows="4"
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="date">
+                                Date
+                            </label>
+
+                            <input
+                                type="date"
+                                id="date"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="time">
+                                Time
+                            </label>
+
+                            <input
+                                type="time"
+                                id="time"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="venue">
+                                Venue
+                            </label>
+
+                            <input
+                                type="text"
+                                id="venue"
+                                placeholder="e.g. Seminar Hall"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="eligibility">
+                                Eligibility
+                            </label>
+
+                            <input
+                                type="text"
+                                id="eligibility"
+                                placeholder="e.g. All students"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="maxParticipants">
+                                Maximum Participants
+                            </label>
+
+                            <input
+                                type="number"
+                                id="maxParticipants"
+                                min="1"
+                                placeholder="e.g. 50"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <p
+                        id="activityMessage"
+                        class="message"
+                    ></p>
+
+
+                    <button
+                        type="submit"
+                        class="primary-btn submit-activity-btn"
+                    >
+                        Submit Activity
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- ACTIVITIES -->
+
+            <div
+                id="organizerActivities"
+                class="organizer-activities"
+            >
+
+                <p class="loading">
+                    Loading activities...
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="js/organizer.js"></script>
+
+</body>
+</html>

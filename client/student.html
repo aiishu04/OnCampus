@@ -1,15 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>OnCampus - Student Dashboard</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="css/style.css">
+    <title>
+        OnCampus - Student Dashboard
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
 </head>
 
+
 <body>
+
+
+    <!-- =========================
+         NAVBAR
+    ========================== -->
 
     <header class="navbar">
 
@@ -17,13 +35,18 @@
             OnCampus
         </div>
 
+
         <div class="navbar-right">
 
             <span id="studentName">
                 Student
             </span>
 
-            <button id="logoutBtn" class="logout-btn">
+
+            <button
+                id="logoutBtn"
+                class="logout-btn"
+            >
                 Logout
             </button>
 
@@ -32,13 +55,30 @@
     </header>
 
 
+
+    <!-- =========================
+         MAIN DASHBOARD
+    ========================== -->
+
     <main class="dashboard-container">
+
+
+        <!-- WELCOME -->
 
         <section class="welcome-section">
 
             <h1>
-                Welcome, <span id="welcomeName">Student</span> 👋
+
+                Welcome,
+
+                <span id="welcomeName">
+                    Student
+                </span>
+
+                👋
+
             </h1>
+
 
             <p>
                 Discover activities and opportunities happening on campus.
@@ -47,21 +87,155 @@
         </section>
 
 
+
+        <!-- =========================
+             NOTIFICATIONS
+        ========================== -->
+
         <section class="dashboard-section">
+
+            <div class="section-header notification-header">
+
+                <div>
+
+                    <h2>
+                        🔔 Notifications
+                    </h2>
+
+                    <p>
+                        Stay updated about your activities and registrations.
+                    </p>
+
+                </div>
+
+
+                <button
+                    id="markAllReadBtn"
+                    class="mark-all-read-btn"
+                >
+                    Mark all as read
+                </button>
+
+            </div>
+
+
+            <div
+                id="notificationsContainer"
+                class="notifications-list"
+            >
+
+                <p class="loading">
+                    Loading notifications...
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             UPCOMING ACTIVITIES
+        ========================== -->
+
+        <section class="dashboard-section">
+
 
             <div class="section-header">
 
                 <div>
-                    <h2>Upcoming Activities</h2>
+
+                    <h2>
+                        Upcoming Activities
+                    </h2>
 
                     <p>
                         Explore what's happening around your campus.
                     </p>
+
                 </div>
 
             </div>
 
-            <div id="activitiesContainer" class="activities-grid">
+
+
+            <!-- SEARCH + FILTER -->
+
+            <div class="activity-filters">
+
+
+                <div class="search-box">
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search activities..."
+                    >
+
+                </div>
+
+
+                <div class="filter-box">
+
+                    <select
+                        id="categoryFilter"
+                    >
+
+                        <option value="">
+                            All Categories
+                        </option>
+
+                        <option value="Workshop">
+                            Workshop
+                        </option>
+
+                        <option value="Seminar">
+                            Seminar
+                        </option>
+
+                        <option value="Competition">
+                            Competition
+                        </option>
+
+                        <option value="Cultural">
+                            Cultural
+                        </option>
+
+                        <option value="Sports">
+                            Sports
+                        </option>
+
+                        <option value="Technical">
+                            Technical
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    id="clearFiltersBtn"
+                    class="clear-filter-btn"
+                >
+                    Clear
+                </button>
+
+
+            </div>
+
+
+
+            <!-- ACTIVITIES -->
+
+            <div
+                id="activitiesContainer"
+                class="activities-grid"
+            >
 
                 <p class="loading">
                     Loading activities...
@@ -69,24 +243,39 @@
 
             </div>
 
+
         </section>
 
 
+
+        <!-- =========================
+             MY REGISTRATIONS
+        ========================== -->
+
         <section class="dashboard-section">
+
 
             <div class="section-header">
 
                 <div>
-                    <h2>My Registrations</h2>
+
+                    <h2>
+                        My Registrations
+                    </h2>
 
                     <p>
                         Activities you've registered for.
                     </p>
+
                 </div>
 
             </div>
 
-            <div id="registrationsContainer" class="registrations-list">
+
+            <div
+                id="registrationsContainer"
+                class="registrations-list"
+            >
 
                 <p class="loading">
                     Loading registrations...
@@ -94,12 +283,19 @@
 
             </div>
 
+
         </section>
+
 
     </main>
 
 
+
+    <!-- JAVASCRIPT -->
+
     <script src="js/student.js"></script>
 
+
 </body>
+
 </html>

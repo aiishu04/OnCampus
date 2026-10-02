@@ -5,28 +5,36 @@ const authenticateToken = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
+
+// =========================
 // REGISTER FOR AN ACTIVITY
+// =========================
+
 router.post("/:activityId", authenticateToken, async (req, res) => {
     try {
-        // Only students can register
+
         if (req.user.role !== "student") {
             return res.status(403).json({
                 message: "Only students can register for activities"
             });
         }
 
+
         const { activityId } = req.params;
 
-        // Check whether activity exists and is approved
+
+        // CHECK ACTIVITY
         const [activities] = await db.query(
             `SELECT
                 id,
                 title,
                 max_participants
              FROM activities
-             WHERE id = ? AND status = 'approved'`,
+             WHERE id = ?
+             AND status = 'approved'`,
             [activityId]
         );
+
 
         if (activities.length === 0) {
             return res.status(404).json({
@@ -34,60 +42,107 @@ router.post("/:activityId", authenticateToken, async (req, res) => {
             });
         }
 
+
         const activity = activities[0];
 
-        // Check for existing registration
+
+        // CHECK EXISTING REGISTRATION
         const [existingRegistration] = await db.query(
-            `SELECT id, status
+            `SELECT
+                id,
+                status
              FROM registrations
-             WHERE student_id = ? AND activity_id = ?`,
-            [req.user.id, activityId]
+             WHERE student_id = ?
+             AND activity_id = ?`,
+            [
+                req.user.id,
+                activityId
+            ]
         );
 
+
+        // RE-REGISTER AFTER CANCELLATION
         if (existingRegistration.length > 0) {
-            if (existingRegistration[0].status === "cancelled") {
-                // Allow a student to register again after cancellation
+
+            if (
+                existingRegistration[0].status ===
+                "cancelled"
+            ) {
+
                 const [result] = await db.query(
                     `UPDATE registrations
                      SET status = 'registered',
                          registered_at = CURRENT_TIMESTAMP
                      WHERE id = ?`,
-                    [existingRegistration[0].id]
+                    [
+                        existingRegistration[0].id
+                    ]
                 );
 
+
+                // CREATE NOTIFICATION
+                await db.query(
+                    `INSERT INTO notifications
+                    (
+                        user_id,
+                        activity_id,
+                        message
+                    )
+                    VALUES (?, ?, ?)`,
+                    [
+                        req.user.id,
+                        activityId,
+                        `You have successfully registered for ${activity.title}.`
+                    ]
+                );
+
+
                 return res.json({
-                    message: "Registration successful",
-                    registrationId: result.insertId || existingRegistration[0].id
+                    message:
+                        "Registration successful",
+                    registrationId:
+                        result.insertId ||
+                        existingRegistration[0].id
                 });
             }
 
+
             return res.status(409).json({
-                message: "You are already registered for this activity"
+                message:
+                    "You are already registered for this activity"
             });
         }
 
-        // Check current participant count
+
+        // CHECK PARTICIPANT LIMIT
         const [countResult] = await db.query(
-            `SELECT COUNT(*) AS total
+            `SELECT
+                COUNT(*) AS total
              FROM registrations
              WHERE activity_id = ?
              AND status = 'registered'`,
             [activityId]
         );
 
-        const currentParticipants = countResult[0].total;
 
-        // Check maximum participants
+        const currentParticipants =
+            countResult[0].total;
+
+
         if (
             activity.max_participants !== null &&
-            currentParticipants >= activity.max_participants
+            currentParticipants >=
+                activity.max_participants
         ) {
+
             return res.status(409).json({
-                message: "Activity registration is full"
+                message:
+                    "Activity registration is full"
             });
         }
 
-        // Create registration
+
+        // CREATE REGISTRATION
         const [result] = await db.query(
             `INSERT INTO registrations
             (
@@ -96,33 +151,72 @@ router.post("/:activityId", authenticateToken, async (req, res) => {
                 status
             )
             VALUES (?, ?, 'registered')`,
-            [req.user.id, activityId]
+            [
+                req.user.id,
+                activityId
+            ]
         );
 
+
+        // CREATE NOTIFICATION
+        await db.query(
+            `INSERT INTO notifications
+            (
+                user_id,
+                activity_id,
+                message
+            )
+            VALUES (?, ?, ?)`,
+            [
+                req.user.id,
+                activityId,
+                `You have successfully registered for ${activity.title}.`
+            ]
+        );
+
+
         res.status(201).json({
-            message: "Registration successful",
-            registrationId: result.insertId,
-            activity: activity.title
+            message:
+                "Registration successful",
+
+            registrationId:
+                result.insertId,
+
+            activity:
+                activity.title
         });
 
+
     } catch (error) {
-        console.error("Registration error:", error);
+
+        console.error(
+            "Registration error:",
+            error
+        );
+
 
         res.status(500).json({
-            message: "Something went wrong"
+            message:
+                "Something went wrong"
         });
     }
 });
 
 
+// =========================
 // GET MY REGISTRATIONS
+// =========================
+
 router.get("/my", authenticateToken, async (req, res) => {
     try {
+
         if (req.user.role !== "student") {
             return res.status(403).json({
-                message: "Only students can view registrations"
+                message:
+                    "Only students can view registrations"
             });
         }
+
 
         const [registrations] = await db.query(
             `SELECT
@@ -139,64 +233,132 @@ router.get("/my", authenticateToken, async (req, res) => {
                 a.eligibility,
                 a.max_participants
              FROM registrations r
-             JOIN activities a ON r.activity_id = a.id
+             JOIN activities a
+                ON r.activity_id = a.id
              WHERE r.student_id = ?
              ORDER BY a.date ASC, a.time ASC`,
             [req.user.id]
         );
 
+
         res.json({
-            registrations: registrations
+            registrations:
+                registrations
         });
+
 
     } catch (error) {
-        console.error("Get registrations error:", error);
 
-        res.status(500).json({
-            message: "Something went wrong"
-        });
-    }
-});
-
-
-// CANCEL REGISTRATION
-router.put("/:activityId/cancel", authenticateToken, async (req, res) => {
-    try {
-        if (req.user.role !== "student") {
-            return res.status(403).json({
-                message: "Only students can cancel registrations"
-            });
-        }
-
-        const { activityId } = req.params;
-
-        const [result] = await db.query(
-            `UPDATE registrations
-             SET status = 'cancelled'
-             WHERE student_id = ?
-             AND activity_id = ?
-             AND status = 'registered'`,
-            [req.user.id, activityId]
+        console.error(
+            "Get registrations error:",
+            error
         );
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({
-                message: "Active registration not found"
-            });
-        }
-
-        res.json({
-            message: "Registration cancelled successfully"
-        });
-
-    } catch (error) {
-        console.error("Cancel registration error:", error);
 
         res.status(500).json({
-            message: "Something went wrong"
+            message:
+                "Something went wrong"
         });
     }
 });
+
+
+// =========================
+// CANCEL REGISTRATION
+// =========================
+
+router.put(
+    "/:activityId/cancel",
+    authenticateToken,
+    async (req, res) => {
+
+        try {
+
+            if (req.user.role !== "student") {
+                return res.status(403).json({
+                    message:
+                        "Only students can cancel registrations"
+                });
+            }
+
+
+            const { activityId } =
+                req.params;
+
+
+            const [result] = await db.query(
+                `UPDATE registrations
+                 SET status = 'cancelled'
+                 WHERE student_id = ?
+                 AND activity_id = ?
+                 AND status = 'registered'`,
+                [
+                    req.user.id,
+                    activityId
+                ]
+            );
+
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({
+                    message:
+                        "Active registration not found"
+                });
+            }
+
+
+            // GET ACTIVITY TITLE
+            const [activities] =
+                await db.query(
+                    `SELECT title
+                     FROM activities
+                     WHERE id = ?`,
+                    [activityId]
+                );
+
+
+            // CREATE CANCELLATION NOTIFICATION
+            if (activities.length > 0) {
+
+                await db.query(
+                    `INSERT INTO notifications
+                    (
+                        user_id,
+                        activity_id,
+                        message
+                    )
+                    VALUES (?, ?, ?)`,
+                    [
+                        req.user.id,
+                        activityId,
+                        `Your registration for ${activities[0].title} has been cancelled.`
+                    ]
+                );
+
+            }
+
+
+            res.json({
+                message:
+                    "Registration cancelled successfully"
+            });
+
+
+        } catch (error) {
+
+            console.error(
+                "Cancel registration error:",
+                error
+            );
+
+
+            res.status(500).json({
+                message:
+                    "Something went wrong"
+            });
+        }
+    }
+);
 
 
 module.exports = router;
