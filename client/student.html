@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OnCampus - Student Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <div class="navbar-brand">
+            OnCampus
+        </div>
+
+        <div class="navbar-right">
+
+            <span id="studentName">
+                Student
+            </span>
+
+            <button id="logoutBtn" class="logout-btn">
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="dashboard-container">
+
+        <section class="welcome-section">
+
+            <h1>
+                Welcome, <span id="welcomeName">Student</span> 👋
+            </h1>
+
+            <p>
+                Discover activities and opportunities happening on campus.
+            </p>
+
+        </section>
+
+
+        <section class="dashboard-section">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Upcoming Activities</h2>
+
+                    <p>
+                        Explore what's happening around your campus.
+                    </p>
+                </div>
+
+            </div>
+
+            <div id="activitiesContainer" class="activities-grid">
+
+                <p class="loading">
+                    Loading activities...
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section class="dashboard-section">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>My Registrations</h2>
+
+                    <p>
+                        Activities you've registered for.
+                    </p>
+                </div>
+
+            </div>
+
+            <div id="registrationsContainer" class="registrations-list">
+
+                <p class="loading">
+                    Loading registrations...
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="js/student.js"></script>
+
+</body>
+</html>
