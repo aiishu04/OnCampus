@@ -1,348 +1,285 @@
+const API_BASE = "http://localhost:5001/api";
+
 const token = localStorage.getItem("token");
-const userData = localStorage.getItem("user");
+
+let storedUser = null;
+
+try {
+    storedUser = JSON.parse(
+        localStorage.getItem("user") || "null"
+    );
+} catch (error) {
+    console.error("User data error:", error);
+    storedUser = null;
+}
+
+const params = new URLSearchParams(
+    window.location.search
+);
+
+const activityId = params.get("id");
 
 
-// CHECK LOGIN
-if (!token || !userData) {
-    window.location.href = "index.html";
+// =====================================================
+// ELEMENTS
+// =====================================================
+
+const loader = document.getElementById("pageLoader");
+
+const activityTitle =
+    document.getElementById("activityTitle");
+
+const activityCategory =
+    document.getElementById("activityCategory");
+
+const activityOrganizer =
+    document.getElementById("activityOrganizer");
+
+const activityDescription =
+    document.getElementById("activityDescription");
+
+const activityDate =
+    document.getElementById("activityDate");
+
+const activityTime =
+    document.getElementById("activityTime");
+
+const activityVenue =
+    document.getElementById("activityVenue");
+
+const activityParticipants =
+    document.getElementById("activityParticipants");
+
+const activityEligibility =
+    document.getElementById("activityEligibility");
+
+const activityStatus =
+    document.getElementById("activityStatus");
+
+const registerActivityBtn =
+    document.getElementById("registerActivityBtn");
+
+const activityUserName =
+    document.getElementById("activityUserName");
+
+const activityUserInitial =
+    document.getElementById("activityUserInitial");
+
+const activityLogoutBtn =
+    document.getElementById("activityLogoutBtn");
+
+const activityToast =
+    document.getElementById("activityToast");
+
+
+// =====================================================
+// LOADER
+// =====================================================
+
+function hideLoader() {
+
+    if (!loader) {
+        return;
+    }
+
+    loader.classList.add("hidden");
 }
 
 
-// USER DATA
-const user = JSON.parse(userData);
+// Hide normally after page resources load
+window.addEventListener("load", () => {
 
-
-// DISPLAY USER NAME
-document.getElementById("studentName").textContent = user.name;
-
-
-// LOGOUT
-document.getElementById("logoutBtn").addEventListener("click", () => {
-
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-
-    window.location.href = "index.html";
+    setTimeout(() => {
+        hideLoader();
+    }, 500);
 
 });
 
 
-// GET ACTIVITY ID FROM URL
-const urlParams = new URLSearchParams(window.location.search);
+// Failsafe:
+// even if an image/resource takes too long,
+// the page will not remain stuck on the loader.
+setTimeout(() => {
 
-const activityId = urlParams.get("id");
+    hideLoader();
+
+}, 1800);
 
 
-// ACTIVITY CONTAINER
-const container =
-    document.getElementById("activityContainer");
+// =====================================================
+// AUTH
+// =====================================================
 
+if (!token || !storedUser) {
 
-// CHECK ACTIVITY ID
-if (!activityId) {
+    hideLoader();
 
-    container.innerHTML = `
-        <div class="error-box">
-            Activity ID is missing.
-        </div>
-    `;
-
-} else {
-
-    loadActivity();
+    window.location.href = "index.html";
 
 }
 
 
+// =====================================================
+// USER
+// =====================================================
+
+function setupUser() {
+
+    if (!storedUser) {
+        return;
+    }
+
+    const name =
+        storedUser.name ||
+        storedUser.full_name ||
+        "Student";
+
+    if (activityUserName) {
+
+        activityUserName.textContent = name;
+
+    }
+
+    if (activityUserInitial) {
+
+        activityUserInitial.textContent =
+            name
+                .charAt(0)
+                .toUpperCase();
+
+    }
+
+}
+
+
+// =====================================================
+// DATE
+// =====================================================
+
+function formatDate(value) {
+
+    if (!value) {
+        return "—";
+    }
+
+    let dateString = String(value);
+
+    // Prevent timezone shifting
+    if (dateString.includes("T")) {
+
+        dateString =
+            dateString.split("T")[0];
+
+    }
+
+    const parts =
+        dateString.split("-");
+
+    if (parts.length !== 3) {
+
+        return dateString;
+
+    }
+
+    const year =
+        Number(parts[0]);
+
+    const month =
+        Number(parts[1]);
+
+    const day =
+        Number(parts[2]);
+
+    const date =
+        new Date(
+            year,
+            month - 1,
+            day
+        );
+
+    return date.toLocaleDateString(
+        "en-IN",
+        {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+// =====================================================
+// TIME
+// =====================================================
+
+function formatTime(value) {
+
+    if (!value) {
+        return "—";
+    }
+
+    const parts =
+        String(value).split(":");
+
+    if (parts.length < 2) {
+        return value;
+    }
+
+    let hours =
+        Number(parts[0]);
+
+    const minutes =
+        parts[1];
+
+    const suffix =
+        hours >= 12
+            ? "PM"
+            : "AM";
+
+    hours =
+        hours % 12;
+
+    if (hours === 0) {
+        hours = 12;
+    }
+
+    return `${hours}:${minutes} ${suffix}`;
+
+}
+
+
+// =====================================================
 // LOAD ACTIVITY
+// =====================================================
+
 async function loadActivity() {
 
-    try {
+    if (!activityId) {
 
-        const response = await fetch(
-            `http://localhost:5001/api/activities/${activityId}`
+        showError(
+            "No activity was selected."
         );
 
-        const data = await response.json();
+        hideLoader();
+
+        return;
+
+    }
 
 
-        if (!response.ok) {
+    try {
 
-            container.innerHTML = `
-                <div class="error-box">
-                    ${data.message || "Activity not found"}
-                </div>
-            `;
-
-            return;
-        }
-
-
-        const activity = data.activity;
-
-
-        const formattedDate =
-            new Date(activity.date).toLocaleDateString(
-                "en-IN",
+        const response =
+            await fetch(
+                `${API_BASE}/activities/${activityId}`,
                 {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric"
+                    headers: {
+                        Authorization:
+                            `Bearer ${token}`
+                    }
                 }
             );
-
-
-        container.innerHTML = `
-
-            <div class="activity-details-card">
-
-                <div class="activity-details-header">
-
-                    <span class="activity-category">
-                        ${activity.category}
-                    </span>
-
-                    <h1>
-                        ${activity.title}
-                    </h1>
-
-                    <p class="organizer-text">
-                        Organized by
-                        <strong>${activity.organizer_name}</strong>
-                    </p>
-
-                </div>
-
-
-                <div class="activity-details-content">
-
-                    <div class="details-section">
-
-                        <h2>About this activity</h2>
-
-                        <p>
-                            ${activity.description ||
-                            "No description available."}
-                        </p>
-
-                    </div>
-
-
-                    <div class="details-grid">
-
-                        <div class="detail-item">
-
-                            <span class="detail-label">
-                                Date
-                            </span>
-
-                            <strong>
-                                📅 ${formattedDate}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="detail-item">
-
-                            <span class="detail-label">
-                                Time
-                            </span>
-
-                            <strong>
-                                🕐 ${activity.time}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="detail-item">
-
-                            <span class="detail-label">
-                                Venue
-                            </span>
-
-                            <strong>
-                                📍 ${activity.venue}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="detail-item">
-
-                            <span class="detail-label">
-                                Eligibility
-                            </span>
-
-                            <strong>
-                                ${activity.eligibility ||
-                                "Open to all students"}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="detail-item">
-
-                            <span class="detail-label">
-                                Maximum Participants
-                            </span>
-
-                            <strong>
-                                ${activity.max_participants ||
-                                "No limit"}
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="activity-action">
-
-                        <button
-                            id="registerBtn"
-                            class="primary-btn activity-register-btn"
-                        >
-                            Register for Activity
-                        </button>
-
-                        <p
-                            id="actionMessage"
-                            class="message"
-                        ></p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        `;
-
-
-        document
-            .getElementById("registerBtn")
-            .addEventListener(
-                "click",
-                registerForActivity
-            );
-
-
-        checkRegistration();
-
-
-    } catch (error) {
-
-        console.error(
-            "Activity error:",
-            error
-        );
-
-        container.innerHTML = `
-            <div class="error-box">
-                Unable to connect to server.
-            </div>
-        `;
-    }
-}
-
-
-// CHECK WHETHER STUDENT IS ALREADY REGISTERED
-async function checkRegistration() {
-
-    try {
-
-        const response = await fetch(
-            "http://localhost:5001/api/registrations/my",
-            {
-                headers: {
-                    "Authorization":
-                        `Bearer ${token}`
-                }
-            }
-        );
-
-
-        const data = await response.json();
-
-
-        if (!response.ok) {
-            return;
-        }
-
-
-        const registration =
-            data.registrations.find(
-                (item) =>
-                    String(item.activity_id) ===
-                    String(activityId) &&
-                    item.status === "registered"
-            );
-
-
-        const button =
-            document.getElementById("registerBtn");
-
-
-        if (!button) {
-            return;
-        }
-
-
-        if (registration) {
-
-            button.textContent =
-                "Already Registered";
-
-            button.disabled = true;
-
-            button.classList.add(
-                "registered-btn"
-            );
-
-        }
-
-    } catch (error) {
-
-        console.error(
-            "Check registration error:",
-            error
-        );
-    }
-}
-
-
-// REGISTER
-async function registerForActivity() {
-
-    const button =
-        document.getElementById("registerBtn");
-
-    const message =
-        document.getElementById("actionMessage");
-
-
-    button.disabled = true;
-
-    button.textContent =
-        "Registering...";
-
-
-    try {
-
-        const response = await fetch(
-            `http://localhost:5001/api/registrations/${activityId}`,
-            {
-                method: "POST",
-
-                headers: {
-                    "Authorization":
-                        `Bearer ${token}`
-                }
-            }
-        );
 
 
         const data =
@@ -351,29 +288,251 @@ async function registerForActivity() {
 
         if (!response.ok) {
 
-            message.textContent =
+            throw new Error(
                 data.message ||
-                "Registration failed";
+                "Unable to load activity."
+            );
 
-            button.disabled = false;
-
-            button.textContent =
-                "Register for Activity";
-
-            return;
         }
 
 
-        button.textContent =
-            "Already Registered";
+        const activity =
+            data.activity ||
+            data;
 
-        button.classList.add(
-            "registered-btn"
+
+        displayActivity(activity);
+
+
+    } catch (error) {
+
+        console.error(
+            "Activity loading error:",
+            error
         );
 
 
-        message.textContent =
-            "Registration successful!";
+        showError(
+            error.message ||
+            "Something went wrong."
+        );
+
+    } finally {
+
+        hideLoader();
+
+    }
+
+}
+
+
+// =====================================================
+// DISPLAY ACTIVITY
+// =====================================================
+
+function displayActivity(activity) {
+
+    if (!activity) {
+
+        showError(
+            "Activity information was not found."
+        );
+
+        return;
+
+    }
+
+
+    if (activityTitle) {
+
+        activityTitle.textContent =
+            activity.title ||
+            "Untitled Activity";
+
+    }
+
+
+    if (activityCategory) {
+
+        activityCategory.textContent =
+            (
+                activity.category ||
+                "ACTIVITY"
+            ).toUpperCase();
+
+    }
+
+
+    if (activityOrganizer) {
+
+        activityOrganizer.textContent =
+            activity.organizer_name ||
+            activity.organizer ||
+            "OnCampus Organizer";
+
+    }
+
+
+    if (activityDescription) {
+
+        activityDescription.textContent =
+            activity.description ||
+            "No description has been added for this activity.";
+
+    }
+
+
+    if (activityDate) {
+
+        activityDate.textContent =
+            formatDate(
+                activity.date
+            );
+
+    }
+
+
+    if (activityTime) {
+
+        activityTime.textContent =
+            formatTime(
+                activity.time
+            );
+
+    }
+
+
+    if (activityVenue) {
+
+        activityVenue.textContent =
+            activity.venue ||
+            "Venue not specified";
+
+    }
+
+
+    if (activityEligibility) {
+
+        activityEligibility.textContent =
+            activity.eligibility ||
+            "All students";
+
+    }
+
+
+    if (activityParticipants) {
+
+        if (
+            activity.max_participants !== null &&
+            activity.max_participants !== undefined
+        ) {
+
+            activityParticipants.textContent =
+                `${activity.max_participants} participants`;
+
+        } else {
+
+            activityParticipants.textContent =
+                "Open";
+
+        }
+
+    }
+
+
+    if (activityStatus) {
+
+        activityStatus.innerHTML = `
+            <span class="activity-status-dot"></span>
+            Available
+        `;
+
+    }
+
+}
+
+
+// =====================================================
+// REGISTER
+// =====================================================
+
+async function registerForActivity() {
+
+    if (!activityId) {
+        return;
+    }
+
+    if (!registerActivityBtn) {
+        return;
+    }
+
+
+    registerActivityBtn.disabled = true;
+
+
+    registerActivityBtn.innerHTML = `
+        <span>Registering...</span>
+        <b>...</b>
+    `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/registrations/${activityId}`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        Authorization:
+                            `Bearer ${token}`
+                    }
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Registration failed."
+            );
+
+        }
+
+
+        registerActivityBtn.innerHTML = `
+            <span>Registered ✓</span>
+            <b>✓</b>
+        `;
+
+
+        registerActivityBtn.classList.add(
+            "registered"
+        );
+
+
+        showToast(
+            "Registration successful",
+            "This activity has been added to your events."
+        );
+
+
+        setTimeout(() => {
+
+            window.location.href =
+                "student.html#registrations";
+
+        }, 1400);
+
 
     } catch (error) {
 
@@ -382,12 +541,240 @@ async function registerForActivity() {
             error
         );
 
-        message.textContent =
-            "Unable to connect to server";
 
-        button.disabled = false;
+        registerActivityBtn.disabled =
+            false;
 
-        button.textContent =
-            "Register for Activity";
+
+        registerActivityBtn.innerHTML = `
+            <span>Register now</span>
+            <b>→</b>
+        `;
+
+
+        showToast(
+            "Registration failed",
+            error.message ||
+            "Please try again."
+        );
+
     }
+
 }
+
+
+// =====================================================
+// TOAST
+// =====================================================
+
+function showToast(
+    title,
+    message
+) {
+
+    if (!activityToast) {
+        return;
+    }
+
+
+    const titleElement =
+        activityToast.querySelector(
+            "strong"
+        );
+
+
+    const messageElement =
+        activityToast.querySelector(
+            "span"
+        );
+
+
+    if (titleElement) {
+
+        titleElement.textContent =
+            title;
+
+    }
+
+
+    if (messageElement) {
+
+        messageElement.textContent =
+            message;
+
+    }
+
+
+    activityToast.classList.add(
+        "show"
+    );
+
+
+    setTimeout(() => {
+
+        activityToast.classList.remove(
+            "show"
+        );
+
+    }, 3500);
+
+}
+
+
+// =====================================================
+// ERROR STATE
+// =====================================================
+
+function showError(message) {
+
+    if (activityTitle) {
+
+        activityTitle.textContent =
+            "Activity unavailable";
+
+    }
+
+
+    if (activityCategory) {
+
+        activityCategory.textContent =
+            "ERROR";
+
+    }
+
+
+    if (activityOrganizer) {
+
+        activityOrganizer.textContent =
+            "OnCampus";
+
+    }
+
+
+    if (activityDescription) {
+
+        activityDescription.textContent =
+            message;
+
+    }
+
+
+    if (activityDate) {
+
+        activityDate.textContent =
+            "—";
+
+    }
+
+
+    if (activityTime) {
+
+        activityTime.textContent =
+            "—";
+
+    }
+
+
+    if (activityVenue) {
+
+        activityVenue.textContent =
+            "—";
+
+    }
+
+
+    if (activityParticipants) {
+
+        activityParticipants.textContent =
+            "—";
+
+    }
+
+
+    if (activityEligibility) {
+
+        activityEligibility.textContent =
+            "Unavailable";
+
+    }
+
+
+    if (activityStatus) {
+
+        activityStatus.innerHTML = `
+            <span
+                class="activity-status-dot"
+                style="
+                    background:#e36d12;
+                    box-shadow:none;
+                "
+            ></span>
+            Unavailable
+        `;
+
+    }
+
+
+    if (registerActivityBtn) {
+
+        registerActivityBtn.disabled =
+            true;
+
+        registerActivityBtn.innerHTML = `
+            <span>Unavailable</span>
+            <b>×</b>
+        `;
+
+    }
+
+}
+
+
+// =====================================================
+// LOGOUT
+// =====================================================
+
+if (activityLogoutBtn) {
+
+    activityLogoutBtn.addEventListener(
+        "click",
+        () => {
+
+            localStorage.removeItem(
+                "token"
+            );
+
+            localStorage.removeItem(
+                "user"
+            );
+
+            window.location.href =
+                "index.html";
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// REGISTER BUTTON
+// =====================================================
+
+if (registerActivityBtn) {
+
+    registerActivityBtn.addEventListener(
+        "click",
+        registerForActivity
+    );
+
+}
+
+
+// =====================================================
+// INITIALIZE
+// =====================================================
+
+setupUser();
+
+loadActivity();

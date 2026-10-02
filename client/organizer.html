@@ -1,300 +1,938 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>OnCampus - Organizer Dashboard</title>
 
+    <!-- Global OnCampus Styles -->
     <link rel="stylesheet" href="css/style.css">
+
+    <!-- Organizer Dashboard Styles -->
+    <link rel="stylesheet" href="css/organizer.css">
 </head>
 
-<body>
+<body class="organizer-page">
+
+    <!-- =====================================================
+         PAGE LOADER
+    ====================================================== -->
+
+    <div
+        class="page-loader"
+        id="pageLoader"
+        aria-hidden="true"
+    >
+
+        <div class="loader-inner">
+
+            <div class="loader-mark">
+                O
+            </div>
+
+            <div class="loader-line"></div>
+
+            <span>
+                ONCAMPUS
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         TOP UNIVERSITY BAR
+    ====================================================== -->
+
+    <div class="top-bar">
+
+        <div class="top-bar-inner">
+
+            <span>
+                RAJASTHAN TECHNICAL UNIVERSITY
+            </span>
+
+            <span>
+                ORGANIZER PORTAL
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
 
     <header class="navbar">
 
-        <div class="navbar-brand">
-            OnCampus
-        </div>
+        <div class="navbar-inner">
 
-        <div class="navbar-right">
+            <a
+                href="student.html"
+                class="navbar-brand"
+            >
 
-            <span id="organizerName">
-                Organizer
-            </span>
+                <img
+                    src="assets/oncampus-logo.png"
+                    alt="OnCampus"
+                    class="navbar-logo"
+                >
 
-            <button id="logoutBtn" class="logout-btn">
-                Logout
-            </button>
+                <span class="navbar-brand-text">
+                    OnCampus
+                </span>
+
+            </a>
+
+
+            <div class="navbar-right">
+
+                <div class="navbar-user">
+
+                    <span class="navbar-user-label">
+                        Organizer
+                    </span>
+
+                    <strong id="organizerName">
+                        Organizer
+                    </strong>
+
+                </div>
+
+
+                <button
+                    id="logoutBtn"
+                    class="logout-btn"
+                    type="button"
+                >
+                    Logout
+                </button>
+
+            </div>
 
         </div>
 
     </header>
 
 
-    <main class="dashboard-container">
+    <!-- =====================================================
+         ORGANIZER HERO
+    ====================================================== -->
 
-        <section class="welcome-section">
+    <section class="organizer-hero">
 
-            <h1>
-                Welcome, <span id="welcomeName">Organizer</span> 👋
-            </h1>
+        <div class="organizer-hero-grid"></div>
 
-            <p>
-                Create and manage your campus activities.
-            </p>
+        <div class="organizer-hero-orb organizer-orb-one"></div>
 
-        </section>
+        <div class="organizer-hero-orb organizer-orb-two"></div>
 
 
-        <section class="dashboard-section">
+        <div class="organizer-hero-inner">
 
-            <div class="section-header organizer-header">
+            <div class="organizer-hero-copy">
+
+                <div class="organizer-kicker">
+
+                    <span></span>
+
+                    ORGANIZER DASHBOARD
+
+                    <i></i>
+
+                </div>
+
+
+                <h1>
+                    Make campus
+                    <em>happen.</em>
+                </h1>
+
+
+                <p>
+                    Create activities, manage registrations,
+                    and bring students together through
+                    meaningful campus experiences.
+                </p>
+
+
+                <div class="organizer-hero-actions">
+
+                    <button
+                        id="heroCreateBtn"
+                        class="primary-btn organizer-hero-btn"
+                        type="button"
+                    >
+                        + Create Activity
+                    </button>
+
+
+                    <a
+                        href="activities.html"
+                        class="secondary-btn organizer-secondary-btn"
+                    >
+                        View Activities
+
+                        <span>
+                            →
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- HERO ROLE CARD -->
+
+            <div class="organizer-hero-card">
+
+                <span class="organizer-hero-card-label">
+                    YOUR ROLE
+                </span>
+
+                <strong>
+                    ORGANIZER
+                </strong>
+
+                <p>
+                    Create. Organize. Connect.
+                </p>
+
+                <div class="organizer-hero-card-line"></div>
+
+                <span>
+                    ONCAMPUS / RTU KOTA
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- HERO BOTTOM INFO -->
+
+        <div class="organizer-hero-bottom">
+
+            <span>
+                CREATE ACTIVITIES
+            </span>
+
+            <span>
+                MANAGE PARTICIPANTS
+            </span>
+
+            <span>
+                BUILD CAMPUS EXPERIENCES
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN ORGANIZER DASHBOARD
+    ====================================================== -->
+
+    <main class="organizer-main">
+
+        <div class="organizer-main-inner">
+
+
+            <!-- =================================================
+                 WELCOME / OVERVIEW
+            ================================================== -->
+
+            <section class="organizer-welcome">
 
                 <div>
 
+                    <span class="section-label">
+                        ORGANIZER SPACE
+                    </span>
+
+
                     <h2>
-                        My Activities
+
+                        Welcome,
+
+                        <span id="welcomeName">
+                            Organizer
+                        </span>
+
                     </h2>
 
+
                     <p>
-                        Manage your activities and registrations.
+                        Manage your activities and keep track
+                        of student registrations.
                     </p>
 
                 </div>
 
-                <button
-                    id="showCreateBtn"
-                    class="primary-btn create-btn"
-                >
-                    + Create Activity
-                </button>
 
-            </div>
+                <div class="organizer-overview-card">
+
+                    <span>
+                        PLATFORM
+                    </span>
+
+                    <strong>
+                        OnCampus
+                    </strong>
+
+                    <small>
+                        RTU Kota
+                    </small>
+
+                </div>
+
+            </section>
 
 
-            <!-- CREATE ACTIVITY FORM -->
+            <!-- =================================================
+                 ACTIVITY MANAGEMENT
+            ================================================== -->
 
-            <div
-                id="createActivitySection"
-                class="create-activity-card hidden"
-            >
+            <section class="dashboard-section">
 
-                <div class="form-header">
 
-                    <h2>
-                        Create New Activity
-                    </h2>
+                <!-- SECTION HEADER -->
+
+                <div class="section-header organizer-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            ACTIVITY MANAGEMENT
+                        </span>
+
+
+                        <h2>
+                            My Activities
+                        </h2>
+
+
+                        <p>
+                            Create activities, monitor approval
+                            status, and manage registrations.
+                        </p>
+
+                    </div>
+
 
                     <button
-                        id="closeCreateBtn"
-                        class="close-btn"
+                        id="showCreateBtn"
+                        class="primary-btn create-btn"
+                        type="button"
                     >
-                        ×
+
+                        <span>
+                            +
+                        </span>
+
+                        Create Activity
+
                     </button>
 
                 </div>
 
 
-                <form id="activityForm">
+                <!-- =================================================
+                     CREATE ACTIVITY FORM
+                ================================================== -->
 
-                    <div class="form-grid">
-
-                        <div class="form-group">
-
-                            <label for="title">
-                                Activity Title
-                            </label>
-
-                            <input
-                                type="text"
-                                id="title"
-                                placeholder="e.g. Coding Workshop"
-                                required
-                            >
-
-                        </div>
+                <div
+                    id="createActivitySection"
+                    class="create-activity-card hidden"
+                >
 
 
-                        <div class="form-group">
+                    <!-- FORM HEADER -->
 
-                            <label for="category">
-                                Category
-                            </label>
+                    <div class="form-header">
 
-                            <select
-                                id="category"
-                                required
-                            >
+                        <div>
 
-                                <option value="">
-                                    Select category
-                                </option>
+                            <span class="section-label">
+                                NEW ACTIVITY
+                            </span>
 
-                                <option value="Workshop">
-                                    Workshop
-                                </option>
 
-                                <option value="Seminar">
-                                    Seminar
-                                </option>
+                            <h2>
+                                Create New Activity
+                            </h2>
 
-                                <option value="Competition">
-                                    Competition
-                                </option>
 
-                                <option value="Cultural">
-                                    Cultural
-                                </option>
-
-                                <option value="Sports">
-                                    Sports
-                                </option>
-
-                                <option value="Technical">
-                                    Technical
-                                </option>
-
-                                <option value="Other">
-                                    Other
-                                </option>
-
-                            </select>
+                            <p>
+                                Submit your activity for admin approval.
+                            </p>
 
                         </div>
 
 
-                        <div class="form-group full-width">
-
-                            <label for="description">
-                                Description
-                            </label>
-
-                            <textarea
-                                id="description"
-                                placeholder="Describe the activity..."
-                                rows="4"
-                            ></textarea>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="date">
-                                Date
-                            </label>
-
-                            <input
-                                type="date"
-                                id="date"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="time">
-                                Time
-                            </label>
-
-                            <input
-                                type="time"
-                                id="time"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="venue">
-                                Venue
-                            </label>
-
-                            <input
-                                type="text"
-                                id="venue"
-                                placeholder="e.g. Seminar Hall"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="eligibility">
-                                Eligibility
-                            </label>
-
-                            <input
-                                type="text"
-                                id="eligibility"
-                                placeholder="e.g. All students"
-                            >
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="maxParticipants">
-                                Maximum Participants
-                            </label>
-
-                            <input
-                                type="number"
-                                id="maxParticipants"
-                                min="1"
-                                placeholder="e.g. 50"
-                            >
-
-                        </div>
+                        <button
+                            id="closeCreateBtn"
+                            class="close-btn"
+                            type="button"
+                            aria-label="Close create activity form"
+                        >
+                            ×
+                        </button>
 
                     </div>
 
 
-                    <p
-                        id="activityMessage"
-                        class="message"
-                    ></p>
+                    <!-- FORM -->
+
+                    <form id="activityForm">
 
 
-                    <button
-                        type="submit"
-                        class="primary-btn submit-activity-btn"
-                    >
-                        Submit Activity
-                    </button>
-
-                </form>
-
-            </div>
+                        <div class="form-grid">
 
 
-            <!-- ACTIVITIES -->
+                            <!-- TITLE -->
 
-            <div
-                id="organizerActivities"
-                class="organizer-activities"
-            >
+                            <div class="form-group">
 
-                <p class="loading">
-                    Loading activities...
-                </p>
+                                <label for="title">
+                                    Activity Title
+                                </label>
 
-            </div>
 
-        </section>
+                                <input
+                                    type="text"
+                                    id="title"
+                                    placeholder="e.g. Coding Workshop"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- CATEGORY -->
+
+                            <div class="form-group">
+
+                                <label for="category">
+                                    Category
+                                </label>
+
+
+                                <select
+                                    id="category"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select category
+                                    </option>
+
+
+                                    <option value="Workshop">
+                                        Workshop
+                                    </option>
+
+
+                                    <option value="Seminar">
+                                        Seminar
+                                    </option>
+
+
+                                    <option value="Competition">
+                                        Competition
+                                    </option>
+
+
+                                    <option value="Cultural">
+                                        Cultural
+                                    </option>
+
+
+                                    <option value="Sports">
+                                        Sports
+                                    </option>
+
+
+                                    <option value="Technical">
+                                        Technical
+                                    </option>
+
+
+                                    <option value="Other">
+                                        Other
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- DESCRIPTION -->
+
+                            <div class="form-group full-width">
+
+                                <label for="description">
+                                    Description
+                                </label>
+
+
+                                <textarea
+                                    id="description"
+                                    placeholder="Describe the activity, what students will experience, and what they should know..."
+                                    rows="5"
+                                ></textarea>
+
+                            </div>
+
+
+                            <!-- DATE -->
+
+                            <div class="form-group">
+
+                                <label for="date">
+                                    Date
+                                </label>
+
+
+                                <input
+                                    type="date"
+                                    id="date"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- TIME -->
+
+                            <div class="form-group">
+
+                                <label for="time">
+                                    Time
+                                </label>
+
+
+                                <input
+                                    type="time"
+                                    id="time"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- VENUE -->
+
+                            <div class="form-group">
+
+                                <label for="venue">
+                                    Venue
+                                </label>
+
+
+                                <input
+                                    type="text"
+                                    id="venue"
+                                    placeholder="e.g. Seminar Hall"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- ELIGIBILITY -->
+
+                            <div class="form-group">
+
+                                <label for="eligibility">
+                                    Eligibility
+                                </label>
+
+
+                                <input
+                                    type="text"
+                                    id="eligibility"
+                                    placeholder="e.g. All students"
+                                >
+
+                            </div>
+
+
+                            <!-- MAX PARTICIPANTS -->
+
+                            <div class="form-group">
+
+                                <label for="maxParticipants">
+                                    Maximum Participants
+                                </label>
+
+
+                                <input
+                                    type="number"
+                                    id="maxParticipants"
+                                    min="1"
+                                    placeholder="e.g. 50"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- FORM BOTTOM -->
+
+                        <div class="form-bottom">
+
+                            <p
+                                id="activityMessage"
+                                class="message"
+                                role="status"
+                            ></p>
+
+
+                            <button
+                                type="submit"
+                                class="primary-btn submit-activity-btn"
+                            >
+
+                                Submit Activity
+
+                                <span>
+                                    →
+                                </span>
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+                <!-- =================================================
+                     ACTIVITY LIST HEADING
+                ================================================== -->
+
+                <div class="organizer-list-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            YOUR SUBMISSIONS
+                        </span>
+
+
+                        <h3>
+                            Activity Overview
+                        </h3>
+
+                    </div>
+
+
+                    <span class="organizer-list-note">
+                        Approval is required before publishing
+                    </span>
+
+                </div>
+
+
+                <!-- =================================================
+                     ACTIVITIES CONTAINER
+                ================================================== -->
+
+                <div
+                    id="organizerActivities"
+                    class="organizer-activities"
+                >
+
+                    <div class="organizer-loading">
+
+                        <div class="organizer-loading-line"></div>
+
+
+                        <p>
+                            Loading activities...
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 ORGANIZER INFO
+            ================================================== -->
+
+            <section class="organizer-info-strip">
+
+
+                <div class="organizer-info-item">
+
+                    <span class="info-number">
+                        01
+                    </span>
+
+
+                    <div>
+
+                        <strong>
+                            Create
+                        </strong>
+
+
+                        <p>
+                            Submit your campus activity.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="organizer-info-item">
+
+                    <span class="info-number">
+                        02
+                    </span>
+
+
+                    <div>
+
+                        <strong>
+                            Approval
+                        </strong>
+
+
+                        <p>
+                            Admin reviews your submission.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="organizer-info-item">
+
+                    <span class="info-number">
+                        03
+                    </span>
+
+
+                    <div>
+
+                        <strong>
+                            Connect
+                        </strong>
+
+
+                        <p>
+                            Students discover and register.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
 
     </main>
 
 
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="site-footer organizer-footer">
+
+        <div class="footer-inner">
+
+
+            <div class="footer-brand">
+
+                <img
+                    src="assets/oncampus-logo.png"
+                    alt="OnCampus"
+                >
+
+
+                <div>
+
+                    <strong>
+                        OnCampus
+                    </strong>
+
+
+                    <span>
+                        Campus life, organized.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="footer-meta">
+
+                <span>
+                    RAJASTHAN TECHNICAL UNIVERSITY
+                </span>
+
+
+                <span>
+                    © 2026 OnCampus
+                </span>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         ORGANIZER JAVASCRIPT
+    ====================================================== -->
+
     <script src="js/organizer.js"></script>
 
+
+    <!-- =====================================================
+         ORGANIZER PAGE HELPERS
+    ====================================================== -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+
+                /*
+                 * HERO CREATE BUTTON
+                 */
+
+                const heroCreateBtn =
+                    document.getElementById(
+                        "heroCreateBtn"
+                    );
+
+
+                const showCreateBtn =
+                    document.getElementById(
+                        "showCreateBtn"
+                    );
+
+
+                if (
+                    heroCreateBtn &&
+                    showCreateBtn
+                ) {
+
+                    heroCreateBtn.addEventListener(
+                        "click",
+                        () => {
+
+                            showCreateBtn.click();
+
+
+                            setTimeout(
+                                () => {
+
+                                    const formSection =
+                                        document.getElementById(
+                                            "createActivitySection"
+                                        );
+
+
+                                    if (formSection) {
+
+                                        formSection.scrollIntoView({
+                                            behavior: "smooth",
+                                            block: "start"
+                                        });
+
+                                    }
+
+                                },
+                                100
+                            );
+
+                        }
+                    );
+
+                }
+
+
+                /*
+                 * PAGE LOADER
+                 */
+
+                const loader =
+                    document.getElementById(
+                        "pageLoader"
+                    );
+
+
+                if (loader) {
+
+                    window.addEventListener(
+                        "load",
+                        () => {
+
+                            setTimeout(
+                                () => {
+
+                                    loader.classList.add(
+                                        "hidden"
+                                    );
+
+                                },
+                                450
+                            );
+
+                        }
+                    );
+
+
+                    /*
+                     * Loader failsafe
+                     */
+
+                    setTimeout(
+                        () => {
+
+                            loader.classList.add(
+                                "hidden"
+                            );
+
+                        },
+                        1800
+                    );
+
+                }
+
+            }
+        );
+
+    </script>
+
 </body>
+
 </html>

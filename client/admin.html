@@ -1,84 +1,596 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>OnCampus - Admin Dashboard</title>
+    <title>OnCampus — Admin Dashboard</title>
 
+    <!-- Main OnCampus Styles -->
     <link rel="stylesheet" href="css/style.css">
+
+    <!-- Admin Dashboard Styles -->
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 
-<body>
+<body class="admin-page">
 
-    <header class="navbar">
+    <!-- =====================================================
+         PAGE LOADER
+         ===================================================== -->
 
-        <div class="navbar-brand">
-            OnCampus
+    <div
+        class="page-loader"
+        id="pageLoader"
+        aria-hidden="true"
+    >
+
+        <div class="loader-inner">
+
+            <div class="loader-mark">
+                OC
+            </div>
+
+            <div class="loader-line">
+                <span></span>
+            </div>
+
+            <p>
+                ONCAMPUS
+            </p>
+
         </div>
 
-        <div class="navbar-right">
+    </div>
 
-            <span id="adminName">
-                Admin
+
+    <!-- =====================================================
+         TOP UNIVERSITY BAR
+         ===================================================== -->
+
+    <div class="university-bar">
+
+        <div class="university-bar-inner">
+
+            <span>
+                RAJASTHAN TECHNICAL UNIVERSITY
             </span>
 
-            <button id="logoutBtn" class="logout-btn">
-                Logout
-            </button>
+            <span class="university-bar-right">
+                KOTA · RAJASTHAN
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         NAVBAR
+         ===================================================== -->
+
+    <header class="main-navbar">
+
+        <div class="navbar-inner">
+
+            <a
+                href="admin.html"
+                class="navbar-logo"
+                aria-label="OnCampus Admin"
+            >
+
+                <img
+                    src="assets/oncampus-logo.png"
+                    alt="OnCampus"
+                >
+
+            </a>
+
+
+            <nav class="navbar-links">
+
+                <a
+                    href="admin.html"
+                    class="active"
+                >
+                    Dashboard
+                </a>
+
+                <a href="activities.html">
+                    Activities
+                </a>
+
+            </nav>
+
+
+            <div class="navbar-user">
+
+                <div class="navbar-user-info">
+
+                    <span class="navbar-user-label">
+                        ADMIN
+                    </span>
+
+                    <strong id="adminName">
+                        Admin
+                    </strong>
+
+                </div>
+
+
+                <div
+                    class="navbar-avatar"
+                    id="adminInitial"
+                >
+                    A
+                </div>
+
+
+                <button
+                    id="logoutBtn"
+                    class="navbar-logout"
+                    type="button"
+                >
+                    Logout
+                </button>
+
+            </div>
 
         </div>
 
     </header>
 
 
-    <main class="dashboard-container">
+    <!-- =====================================================
+         ADMIN HERO
+         ===================================================== -->
 
-        <section class="welcome-section">
+    <section class="admin-hero">
 
-            <h1>
-                Welcome, <span id="welcomeName">Admin</span> 👋
-            </h1>
+        <div class="admin-hero-grid"></div>
 
-            <p>
-                Review and manage activities submitted by organizers.
-            </p>
+        <div class="admin-hero-orb admin-hero-orb-one"></div>
 
-        </section>
+        <div class="admin-hero-orb admin-hero-orb-two"></div>
 
 
-        <section class="dashboard-section">
+        <div class="admin-hero-inner">
 
-            <div class="section-header">
+            <div class="admin-hero-copy">
 
-                <h2>
-                    Pending Activities
-                </h2>
+                <div class="admin-kicker">
+
+                    <span></span>
+
+                    ONCAMPUS ADMINISTRATION
+
+                    <i></i>
+
+                </div>
+
+
+                <h1>
+                    Keep campus
+                    <em>moving.</em>
+                </h1>
+
 
                 <p>
-                    Review activities before they are published to students.
+                    Review activity submissions, manage approvals,
+                    and keep the OnCampus experience organized for
+                    every student.
                 </p>
+
+
+                <div class="admin-hero-actions">
+
+                    <a
+                        href="#pendingSection"
+                        class="admin-primary-btn"
+                    >
+                        Review submissions
+                        <span>↓</span>
+                    </a>
+
+                    <a
+                        href="activities.html"
+                        class="admin-secondary-btn"
+                    >
+                        View activities
+                        <span>↗</span>
+                    </a>
+
+                </div>
 
             </div>
 
 
-            <div
-                id="pendingActivities"
-                class="admin-activities"
+            <div class="admin-hero-card">
+
+                <span class="admin-hero-card-label">
+                    CURRENT QUEUE
+                </span>
+
+                <strong id="heroPendingCount">
+                    0
+                </strong>
+
+                <span class="admin-hero-card-caption">
+                    pending submissions
+                </span>
+
+                <div class="admin-hero-card-line"></div>
+
+                <small>
+                    Review → approve → publish
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-hero-bottom">
+
+            <span>
+                ONCAMPUS / ADMIN
+            </span>
+
+            <span>
+                ACTIVITY MODERATION
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         WELCOME / OVERVIEW
+         ===================================================== -->
+
+    <main class="admin-main">
+
+        <div class="admin-main-inner">
+
+
+            <section class="admin-welcome">
+
+                <div>
+
+                    <span class="admin-section-label">
+                        ADMIN CONSOLE
+                    </span>
+
+                    <h2>
+                        Welcome,
+                        <span id="welcomeName">
+                            Admin
+                        </span>
+                    </h2>
+
+                    <p>
+                        Review activities submitted by organizers
+                        before they become visible to students.
+                    </p>
+
+                </div>
+
+
+                <div class="admin-status-card">
+
+                    <span class="admin-status-dot"></span>
+
+                    <div>
+
+                        <strong>
+                            System active
+                        </strong>
+
+                        <small>
+                            Moderation panel ready
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 QUICK STATS
+                 ================================================= -->
+
+            <section class="admin-stats">
+
+                <article class="admin-stat-card">
+
+                    <span class="admin-stat-number" id="pendingCount">
+                        0
+                    </span>
+
+                    <span class="admin-stat-label">
+                        Pending
+                    </span>
+
+                    <span class="admin-stat-icon">
+                        ⏳
+                    </span>
+
+                </article>
+
+
+                <article class="admin-stat-card">
+
+                    <span class="admin-stat-number">
+                        ✓
+                    </span>
+
+                    <span class="admin-stat-label">
+                        Review & approve
+                    </span>
+
+                    <span class="admin-stat-icon">
+                        ✓
+                    </span>
+
+                </article>
+
+
+                <article class="admin-stat-card">
+
+                    <span class="admin-stat-number">
+                        OC
+                    </span>
+
+                    <span class="admin-stat-label">
+                        OnCampus
+                    </span>
+
+                    <span class="admin-stat-icon">
+                        ◈
+                    </span>
+
+                </article>
+
+            </section>
+
+
+            <!-- =================================================
+                 PENDING ACTIVITIES
+                 ================================================= -->
+
+            <section
+                class="admin-review-section"
+                id="pendingSection"
             >
 
-                <p class="loading">
-                    Loading pending activities...
-                </p>
+                <div class="admin-section-heading">
 
-            </div>
+                    <div>
 
-        </section>
+                        <span class="admin-section-label">
+                            NEEDS YOUR ATTENTION
+                        </span>
+
+                        <h2>
+                            Pending activities
+                        </h2>
+
+                        <p>
+                            Review each submission before it is
+                            published to students.
+                        </p>
+
+                    </div>
+
+
+                    <div class="admin-queue-count">
+
+                        <strong id="sectionPendingCount">
+                            0
+                        </strong>
+
+                        <span>
+                            waiting
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="pendingActivities"
+                    class="admin-activities"
+                >
+
+                    <div class="admin-loading">
+
+                        <div class="admin-loading-spinner"></div>
+
+                        <p>
+                            Loading pending activities...
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 ADMIN INFO STRIP
+                 ================================================= -->
+
+            <section class="admin-info-strip">
+
+                <div class="admin-info-number">
+                    01
+                </div>
+
+                <div class="admin-info-content">
+
+                    <span>
+                        MODERATION FLOW
+                    </span>
+
+                    <strong>
+                        Review carefully. Publish confidently.
+                    </strong>
+
+                </div>
+
+                <div class="admin-info-arrow">
+                    →
+                </div>
+
+            </section>
+
+        </div>
 
     </main>
 
 
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="admin-footer">
+
+        <div class="admin-footer-inner">
+
+            <div class="admin-footer-brand">
+
+                <img
+                    src="assets/oncampus-logo.png"
+                    alt="OnCampus"
+                >
+
+                <p>
+                    The campus activity platform
+                    for RTU students.
+                </p>
+
+            </div>
+
+
+            <div class="admin-footer-meta">
+
+                <span>
+                    ONCAMPUS
+                </span>
+
+                <span>
+                    RTU KOTA
+                </span>
+
+                <span>
+                    ADMIN PANEL
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-footer-bottom">
+
+            <span>
+                © 2026 OnCampus
+            </span>
+
+            <span>
+                Built for campus life.
+            </span>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         TOAST
+         ===================================================== -->
+
+    <div
+        id="adminToast"
+        class="admin-toast"
+        aria-live="polite"
+    >
+
+        <span class="admin-toast-icon">
+            ✓
+        </span>
+
+        <div>
+
+            <strong id="adminToastTitle">
+                Done
+            </strong>
+
+            <p id="adminToastMessage">
+                Action completed.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SCRIPT
+         ===================================================== -->
+
     <script src="js/admin.js"></script>
 
+
+    <!-- =====================================================
+         SMALL UI BRIDGE
+         ===================================================== -->
+
+    <script>
+
+        const adminPageLoader =
+            document.getElementById("pageLoader");
+
+        function hideAdminLoader() {
+
+            if (!adminPageLoader) {
+                return;
+            }
+
+            adminPageLoader.classList.add("hidden");
+
+        }
+
+
+        window.addEventListener(
+            "load",
+            () => {
+
+                setTimeout(
+                    hideAdminLoader,
+                    500
+                );
+
+            }
+        );
+
+
+        setTimeout(
+            hideAdminLoader,
+            1800
+        );
+
+    </script>
+
 </body>
+
 </html>

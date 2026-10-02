@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#071522"
+    >
+
+    <title>OnCampus | Discover Activities</title>
+
+    <!-- Main site styles -->
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <!-- Discover page styles -->
+    <link
+        rel="stylesheet"
+        href="css/activities.css"
+    >
+</head>
+
+<body class="activities-page">
+
+    <!-- =====================================================
+         PAGE LOADER
+    ====================================================== -->
+
+    <div
+        id="pageLoader"
+        class="page-loader"
+    >
+
+        <div class="loader-logo">
+            <img
+                src="assets/oncampus-logo.png"
+                alt="OnCampus"
+            >
+        </div>
+
+        <div class="loader-line">
+            <span></span>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <div class="top-bar">
+
+        <div class="top-bar-inner">
+
+            <div class="top-left">
+
+                <span>
+                    RAJASTHAN TECHNICAL UNIVERSITY
+                </span>
+
+                <i></i>
+
+                <span>
+                    KOTA
+                </span>
+
+            </div>
+
+
+            <div class="top-links">
+
+                <a href="student.html">
+                    Campus Events
+                </a>
+
+                <a href="activities.html">
+                    Opportunities
+                </a>
+
+                <a href="student.html#notificationSection">
+                    Notices
+                </a>
+
+                <a
+                    href="https://www.rtu.ac.in/"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    RTU Website ↗
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <header class="navbar">
+
+        <div class="navbar-inner">
+
+            <a
+                href="student.html"
+                class="navbar-logo"
+            >
+
+                <img
+                    src="assets/oncampus-logo.png"
+                    alt="OnCampus - RTU Kota"
+                >
+
+                <span>
+                    RTU • KOTA
+                </span>
+
+            </a>
+
+
+            <nav class="desktop-nav">
+
+                <a
+                    href="student.html"
+                    class="nav-link"
+                >
+                    Home
+                </a>
+
+                <a
+                    href="activities.html"
+                    class="nav-link active"
+                >
+                    Discover
+                </a>
+
+                <a
+                    href="student.html#registrations"
+                    class="nav-link"
+                >
+                    My Events
+                </a>
+
+            </nav>
+
+
+            <div class="nav-right">
+
+                <div class="profile">
+
+                    <div
+                        id="activitiesUserInitial"
+                        class="profile-avatar"
+                    >
+                        A
+                    </div>
+
+                    <div class="profile-info">
+
+                        <strong id="activitiesUserName">
+                            Student
+                        </strong>
+
+                        <span>
+                            STUDENT
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="activitiesLogoutBtn"
+                    class="logout-btn"
+                    type="button"
+                >
+                    Logout
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="discover-hero">
+
+        <div class="discover-grid"></div>
+
+        <div class="discover-orb discover-orb-one"></div>
+
+        <div class="discover-orb discover-orb-two"></div>
+
+
+        <div class="discover-hero-inner">
+
+            <div class="discover-hero-copy">
+
+                <div class="discover-kicker">
+
+                    <span></span>
+
+                    CAMPUS LIFE
+
+                    <i></i>
+
+                    RTU KOTA
+
+                </div>
+
+
+                <h1>
+                    Discover what's
+                    <em>happening.</em>
+                </h1>
+
+
+                <p>
+                    Find workshops, competitions,
+                    cultural events, sports and
+                    everything happening around
+                    your campus.
+                </p>
+
+            </div>
+
+
+            <div class="discover-hero-stat">
+
+                <strong id="heroActivityCount">
+                    0
+                </strong>
+
+                <span>
+                    LIVE ACTIVITIES
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="discover-hero-bottom">
+
+            <span>
+                ONCAMPUS • DISCOVER
+            </span>
+
+            <span>
+                FIND YOUR NEXT THING ↓
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="discover-main">
+
+        <div class="discover-main-inner">
+
+
+            <!-- =================================================
+                 HEADING
+            ================================================== -->
+
+            <div class="discover-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        EXPLORE
+                    </span>
+
+                    <h2>
+                        All activities
+                    </h2>
+
+                    <p>
+                        Browse approved activities
+                        happening across RTU.
+                    </p>
+
+                </div>
+
+
+                <div class="discover-count">
+
+                    <strong id="activityCount">
+                        0
+                    </strong>
+
+                    <span>
+                        activities
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FILTER BAR
+            ================================================== -->
+
+            <section class="discover-filter-card">
+
+                <div class="discover-search">
+
+                    <span>
+                        ⌕
+                    </span>
+
+                    <input
+                        id="searchInput"
+                        type="text"
+                        placeholder="Search activities..."
+                        autocomplete="off"
+                    >
+
+                    <button
+                        id="clearSearchBtn"
+                        type="button"
+                        aria-label="Clear search"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <select
+                    id="categoryFilter"
+                    aria-label="Filter by category"
+                >
+
+                    <option value="">
+                        All categories
+                    </option>
+
+                    <option value="Workshop">
+                        Workshop
+                    </option>
+
+                    <option value="Seminar">
+                        Seminar
+                    </option>
+
+                    <option value="Competition">
+                        Competition
+                    </option>
+
+                    <option value="Cultural">
+                        Cultural
+                    </option>
+
+                    <option value="Sports">
+                        Sports
+                    </option>
+
+                    <option value="Technical">
+                        Technical
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+
+                <button
+                    id="clearFiltersBtn"
+                    class="discover-clear"
+                    type="button"
+                >
+                    Clear filters
+                </button>
+
+            </section>
+
+
+            <!-- =================================================
+                 RESULTS
+            ================================================== -->
+
+            <section
+                id="activitiesContainer"
+                class="discover-grid-list"
+            >
+
+                <div class="discover-loading">
+
+                    <div class="discover-loading-bar"></div>
+
+                    <span>
+                        Loading activities...
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 EMPTY STATE
+            ================================================== -->
+
+            <section
+                id="emptyState"
+                class="discover-empty"
+                hidden
+            >
+
+                <div class="discover-empty-icon">
+                    ✦
+                </div>
+
+                <span>
+                    NOTHING FOUND
+                </span>
+
+                <h3>
+                    No activities match
+                    your search.
+                </h3>
+
+                <p>
+                    Try another keyword or
+                    clear the filters.
+                </p>
+
+                <button
+                    id="emptyClearBtn"
+                    type="button"
+                >
+                    Clear filters
+                </button>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="footer-top">
+
+            <div>
+
+                <div class="footer-brand">
+                    OnCampus
+                </div>
+
+                <p>
+                    A campus activity discovery
+                    platform for students at RTU Kota.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <a href="student.html">
+                    Home
+                </a>
+
+                <a href="activities.html">
+                    Discover
+                </a>
+
+                <a href="student.html#registrations">
+                    My Events
+                </a>
+
+                <a
+                    href="https://www.rtu.ac.in/"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    RTU ↗
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <span>
+                ONCAMPUS • RTU KOTA
+            </span>
+
+            <span>
+                Campus life, connected.
+            </span>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         TOAST
+    ====================================================== -->
+
+    <div
+        id="activitiesToast"
+        class="activities-toast"
+        aria-live="polite"
+    >
+
+        <div class="activities-toast-icon">
+            ✓
+        </div>
+
+        <div>
+
+            <strong>
+                Done
+            </strong>
+
+            <span>
+                Action completed.
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="js/activities.js"></script>
+
+</body>
+
+</html>

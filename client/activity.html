@@ -1,56 +1,778 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>OnCampus - Activity Details</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="css/style.css">
+    <meta
+        name="theme-color"
+        content="#071522"
+    >
+
+    <title>
+        OnCampus | Activity
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/activity.css"
+    >
+
 </head>
 
-<body>
+
+<body class="activity-page">
+
+
+    <!-- =====================================================
+         PAGE LOADER
+    ====================================================== -->
+
+    <div
+        id="pageLoader"
+        class="page-loader"
+    >
+
+        <div class="loader-logo">
+
+            <img
+                src="assets/oncampus-logo.png"
+                alt="OnCampus"
+            >
+
+        </div>
+
+        <div class="loader-line">
+            <span></span>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         TOP UNIVERSITY BAR
+    ====================================================== -->
+
+    <div class="top-bar">
+
+        <div class="top-bar-inner">
+
+            <div class="top-left">
+
+                <span>
+                    RAJASTHAN TECHNICAL UNIVERSITY
+                </span>
+
+                <i></i>
+
+                <span>
+                    KOTA
+                </span>
+
+            </div>
+
+
+            <div class="top-links">
+
+                <a href="student.html">
+                    Campus Events
+                </a>
+
+                <a href="activities.html">
+                    Opportunities
+                </a>
+
+                <a href="student.html#notificationSection">
+                    Notices
+                </a>
+
+                <a
+                    href="https://www.rtu.ac.in/"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    RTU Website ↗
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
 
     <header class="navbar">
 
-        <div class="navbar-brand">
-            OnCampus
-        </div>
+        <div class="navbar-inner">
 
-        <div class="navbar-right">
 
-            <span id="studentName">
-                Student
-            </span>
+            <a
+                href="student.html"
+                class="navbar-logo"
+            >
 
-            <button id="logoutBtn" class="logout-btn">
-                Logout
-            </button>
+                <img
+                    src="assets/oncampus-logo.png"
+                    alt="OnCampus - RTU Kota"
+                >
+
+                <span>
+                    RTU • KOTA
+                </span>
+
+            </a>
+
+
+            <nav class="desktop-nav">
+
+                <a
+                    href="student.html"
+                    class="nav-link"
+                >
+                    Home
+                </a>
+
+                <a
+                    href="activities.html"
+                    class="nav-link active"
+                >
+                    Discover
+                </a>
+
+                <a
+                    href="student.html#registrations"
+                    class="nav-link"
+                >
+                    My Events
+                </a>
+
+            </nav>
+
+
+            <div class="nav-right">
+
+                <div class="profile">
+
+                    <div
+                        id="activityUserInitial"
+                        class="profile-avatar"
+                    >
+                        A
+                    </div>
+
+                    <div class="profile-info">
+
+                        <strong id="activityUserName">
+                            Student
+                        </strong>
+
+                        <span>
+                            STUDENT
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="activityLogoutBtn"
+                    class="logout-btn"
+                    type="button"
+                >
+                    Logout
+                </button>
+
+            </div>
 
         </div>
 
     </header>
 
 
-    <main class="activity-details-container">
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
 
-        <a href="student.html" class="back-link">
-            ← Back to Dashboard
-        </a>
+    <main>
 
 
-        <div id="activityContainer">
+        <!-- =================================================
+             ACTIVITY HERO
+        ================================================== -->
 
-            <p class="loading">
-                Loading activity...
-            </p>
+        <section class="activity-hero">
 
-        </div>
+            <div class="activity-hero-grid"></div>
+
+            <div class="activity-hero-orb activity-orb-one"></div>
+
+            <div class="activity-hero-orb activity-orb-two"></div>
+
+
+            <div class="activity-hero-inner">
+
+
+                <div class="activity-hero-content">
+
+
+                    <!-- BACK -->
+
+                    <a
+                        href="activities.html"
+                        class="activity-back"
+                    >
+
+                        <span>
+                            ←
+                        </span>
+
+                        Back to activities
+
+                    </a>
+
+
+                    <!-- CATEGORY -->
+
+                    <div class="activity-kicker">
+
+                        <span class="activity-kicker-line"></span>
+
+                        <span id="activityCategory">
+                            ACTIVITY
+                        </span>
+
+                        <span class="activity-live-dot"></span>
+
+                        <span>
+                            RTU KOTA
+                        </span>
+
+                    </div>
+
+
+                    <!-- TITLE -->
+
+                    <h1
+                        id="activityTitle"
+                        class="activity-title"
+                    >
+                        Loading...
+                    </h1>
+
+
+                    <!-- ORGANIZER -->
+
+                    <p class="activity-organizer">
+
+                        Organized by
+
+                        <strong id="activityOrganizer">
+                            —
+                        </strong>
+
+                    </p>
+
+                </div>
+
+
+                <!-- STATUS PANEL -->
+
+                <div class="activity-status-panel">
+
+                    <span class="activity-status-label">
+                        REGISTRATION
+                    </span>
+
+
+                    <div
+                        id="activityStatus"
+                        class="activity-status"
+                    >
+
+                        <span class="activity-status-dot"></span>
+
+                        Available
+
+                    </div>
+
+
+                    <div class="activity-status-line"></div>
+
+
+                    <span class="activity-status-note">
+                        Join through OnCampus
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- HERO BOTTOM -->
+
+            <div class="activity-hero-bottom">
+
+                <span>
+                    ONCAMPUS • CAMPUS ACTIVITY
+                </span>
+
+                <span>
+                    SCROLL TO EXPLORE ↓
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ACTIVITY CONTENT
+        ================================================== -->
+
+        <section class="activity-content">
+
+            <div class="activity-content-grid">
+
+
+                <!-- =================================================
+                     LEFT COLUMN
+                ================================================== -->
+
+                <div class="activity-main-column">
+
+
+                    <!-- ABOUT -->
+
+                    <article class="activity-section-card">
+
+                        <div class="activity-section-heading">
+
+                            <span class="activity-section-number">
+                                01
+                            </span>
+
+                            <div>
+
+                                <span class="activity-section-label">
+                                    OVERVIEW
+                                </span>
+
+                                <h2>
+                                    About this activity
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+
+                        <p
+                            id="activityDescription"
+                            class="activity-description"
+                        >
+                            Loading activity details...
+                        </p>
+
+                    </article>
+
+
+                    <!-- DETAILS -->
+
+                    <article class="activity-section-card">
+
+                        <div class="activity-section-heading">
+
+                            <span class="activity-section-number">
+                                02
+                            </span>
+
+                            <div>
+
+                                <span class="activity-section-label">
+                                    INFORMATION
+                                </span>
+
+                                <h2>
+                                    Event details
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="activity-details-grid">
+
+
+                            <!-- DATE -->
+
+                            <div class="activity-detail">
+
+                                <div class="activity-detail-icon">
+                                    01
+                                </div>
+
+                                <div>
+
+                                    <span>
+                                        DATE
+                                    </span>
+
+                                    <strong id="activityDate">
+                                        —
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- TIME -->
+
+                            <div class="activity-detail">
+
+                                <div class="activity-detail-icon">
+                                    02
+                                </div>
+
+                                <div>
+
+                                    <span>
+                                        TIME
+                                    </span>
+
+                                    <strong id="activityTime">
+                                        —
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- VENUE -->
+
+                            <div class="activity-detail">
+
+                                <div class="activity-detail-icon">
+                                    03
+                                </div>
+
+                                <div>
+
+                                    <span>
+                                        VENUE
+                                    </span>
+
+                                    <strong id="activityVenue">
+                                        —
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- CAPACITY -->
+
+                            <div class="activity-detail">
+
+                                <div class="activity-detail-icon">
+                                    04
+                                </div>
+
+                                <div>
+
+                                    <span>
+                                        CAPACITY
+                                    </span>
+
+                                    <strong id="activityParticipants">
+                                        —
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- ELIGIBILITY -->
+
+                    <article class="activity-section-card">
+
+                        <div class="activity-section-heading">
+
+                            <span class="activity-section-number">
+                                03
+                            </span>
+
+                            <div>
+
+                                <span class="activity-section-label">
+                                    PARTICIPATION
+                                </span>
+
+                                <h2>
+                                    Eligibility
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="activity-eligibility">
+
+                            <div class="activity-check">
+                                ✓
+                            </div>
+
+                            <div>
+
+                                <span>
+                                    WHO CAN JOIN
+                                </span>
+
+                                <p id="activityEligibility">
+                                    All students
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+
+                <!-- =================================================
+                     RIGHT SIDEBAR
+                ================================================== -->
+
+                <aside class="activity-sidebar">
+
+
+                    <!-- REGISTER -->
+
+                    <div class="activity-register-card">
+
+
+                        <div class="activity-register-top">
+
+                            <span>
+                                ONCAMPUS
+                            </span>
+
+                            <span>
+                                2026
+                            </span>
+
+                        </div>
+
+
+                        <div class="activity-register-line"></div>
+
+
+                        <span class="activity-register-label">
+                            READY TO PARTICIPATE?
+                        </span>
+
+
+                        <h2>
+                            Be part of it.
+                        </h2>
+
+
+                        <p>
+                            Register for this activity and
+                            keep it in your OnCampus events.
+                        </p>
+
+
+                        <button
+                            id="registerActivityBtn"
+                            class="activity-register-btn"
+                            type="button"
+                        >
+
+                            <span>
+                                Register now
+                            </span>
+
+                            <b>
+                                →
+                            </b>
+
+                        </button>
+
+
+                        <div class="activity-register-note">
+
+                            <span>
+                                ✓
+                            </span>
+
+                            Registration is linked to your
+                            student account.
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ONCAMPUS CARD -->
+
+                    <div class="activity-rtu-card">
+
+                        <div class="activity-rtu-card-grid"></div>
+
+                        <span>
+                            CAMPUS PLATFORM
+                        </span>
+
+                        <strong>
+                            ONCAMPUS
+                        </strong>
+
+                        <p>
+                            Everything happening
+                            around you.
+                        </p>
+
+                        <div class="activity-rtu-bottom">
+
+                            RTU • KOTA
+
+                            <span>
+                                ↗
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <footer class="activity-footer">
+
+            <div class="activity-footer-top">
+
+                <div>
+
+                    <strong>
+                        ONCAMPUS
+                    </strong>
+
+                    <span>
+                        RTU KOTA
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    Explore
+
+                    <span>
+                        •
+                    </span>
+
+                    Participate
+
+                    <span>
+                        •
+                    </span>
+
+                    Connect
+
+                </div>
+
+            </div>
+
+
+            <div class="activity-footer-bottom">
+
+                <span>
+                    ONCAMPUS • RAJASTHAN TECHNICAL UNIVERSITY • KOTA
+                </span>
+
+                <span>
+                    Campus life, connected.
+                </span>
+
+            </div>
+
+        </footer>
 
     </main>
 
 
+    <!-- =====================================================
+         TOAST
+    ====================================================== -->
+
+    <div
+        id="activityToast"
+        class="activity-toast"
+        aria-live="polite"
+    >
+
+        <div class="activity-toast-check">
+            ✓
+        </div>
+
+        <div>
+
+            <strong>
+                Registration successful
+            </strong>
+
+            <span>
+                This activity has been added to your events.
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
     <script src="js/activity.js"></script>
 
 </body>
+
 </html>

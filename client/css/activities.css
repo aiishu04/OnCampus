@@ -1,0 +1,1418 @@
+/* =====================================================
+   ONCAMPUS
+   DISCOVER / ACTIVITIES PAGE
+===================================================== */
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.discover-hero {
+    position: relative;
+
+    min-height: 405px;
+
+    overflow: hidden;
+
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at 82% 30%,
+            rgba(25,118,232,.18),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 65% 90%,
+            rgba(227,109,18,.12),
+            transparent 25%
+        ),
+        var(--navy);
+}
+
+
+.discover-grid {
+    position: absolute;
+
+    inset: 0;
+
+    opacity: .32;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,.035) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.035) 1px,
+            transparent 1px
+        );
+
+    background-size: 65px 65px;
+
+    animation:
+        discoverGridMove
+        20s
+        linear
+        infinite;
+}
+
+
+@keyframes discoverGridMove {
+
+    from {
+        transform: translate(0,0);
+    }
+
+    to {
+        transform: translate(65px,65px);
+    }
+
+}
+
+
+.discover-orb {
+    position: absolute;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+.discover-orb-one {
+    width: 430px;
+    height: 430px;
+
+    right: -220px;
+    top: -160px;
+
+    border:
+        1px solid
+        rgba(227,109,18,.25);
+
+    animation:
+        discoverOrbFloat
+        8s
+        ease-in-out
+        infinite;
+}
+
+
+.discover-orb-two {
+    width: 220px;
+    height: 220px;
+
+    left: 48%;
+    bottom: -155px;
+
+    border:
+        1px solid
+        rgba(25,118,232,.25);
+
+    animation:
+        discoverOrbFloat
+        7s
+        ease-in-out
+        infinite
+        reverse;
+}
+
+
+@keyframes discoverOrbFloat {
+
+    0%,
+    100% {
+        transform:
+            translateY(0)
+            rotate(0);
+    }
+
+    50% {
+        transform:
+            translateY(-15px)
+            rotate(7deg);
+    }
+
+}
+
+
+/* =====================================================
+   HERO INNER
+===================================================== */
+
+.discover-hero-inner {
+    position: relative;
+
+    z-index: 2;
+
+    width:
+        min(
+            var(--max),
+            calc(100% - 36px)
+        );
+
+    min-height: 350px;
+
+    margin: auto;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 60px;
+}
+
+
+.discover-hero-copy {
+    max-width: 720px;
+}
+
+
+.discover-kicker {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color:
+        #8db5d9;
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    letter-spacing: 1.7px;
+}
+
+
+.discover-kicker > span {
+    width: 30px;
+
+    height: 2px;
+
+    background:
+        var(--orange);
+}
+
+
+.discover-kicker i {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background:
+        var(--orange);
+
+    box-shadow:
+        0 0 0 5px
+        rgba(227,109,18,.08);
+}
+
+
+.discover-hero h1 {
+    margin-top: 20px;
+
+    color: white;
+
+    font-size:
+        clamp(
+            48px,
+            7vw,
+            78px
+        );
+
+    font-weight: 950;
+
+    line-height: .95;
+
+    letter-spacing: -3.5px;
+}
+
+
+.discover-hero h1 em {
+    color:
+        var(--orange-light);
+
+    font-style: normal;
+}
+
+
+.discover-hero-copy p {
+    max-width: 570px;
+
+    margin-top: 22px;
+
+    color:
+        #91a3b2;
+
+    font-size: 12px;
+
+    line-height: 1.8;
+}
+
+
+/* =====================================================
+   HERO STAT
+===================================================== */
+
+.discover-hero-stat {
+    position: relative;
+
+    min-width: 205px;
+
+    padding: 30px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.1);
+
+    border-radius: 12px;
+
+    background:
+        rgba(255,255,255,.045);
+
+    backdrop-filter:
+        blur(14px);
+
+    box-shadow:
+        0 25px 70px
+        rgba(0,0,0,.15);
+}
+
+
+.discover-hero-stat::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 25px;
+
+    width: 3px;
+    height: 40px;
+
+    background:
+        var(--orange);
+}
+
+
+.discover-hero-stat strong {
+    display: block;
+
+    color: white;
+
+    font-size: 52px;
+
+    font-weight: 950;
+
+    line-height: 1;
+
+    letter-spacing: -2px;
+}
+
+
+.discover-hero-stat span {
+    display: block;
+
+    margin-top: 9px;
+
+    color:
+        #7890a3;
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+    letter-spacing: 1.3px;
+}
+
+
+/* =====================================================
+   HERO BOTTOM
+===================================================== */
+
+.discover-hero-bottom {
+    position: absolute;
+
+    left: 50%;
+    bottom: 0;
+
+    z-index: 3;
+
+    width:
+        min(
+            var(--max),
+            calc(100% - 36px)
+        );
+
+    padding:
+        14px 0;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.08);
+
+    transform:
+        translateX(-50%);
+
+    color:
+        #64798a;
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.discover-main {
+    min-height: 600px;
+
+    padding:
+        70px 0
+        100px;
+
+    background:
+        var(--page);
+}
+
+
+.discover-main-inner {
+    width:
+        min(
+            var(--max),
+            calc(100% - 36px)
+        );
+
+    margin: auto;
+}
+
+
+/* =====================================================
+   HEADING
+===================================================== */
+
+.discover-heading {
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    margin-bottom: 28px;
+}
+
+
+.discover-heading h2 {
+    margin-top: 6px;
+
+    color:
+        var(--rtu-blue);
+
+    font-size: 30px;
+
+    font-weight: 950;
+
+    letter-spacing: -1.2px;
+}
+
+
+.discover-heading p {
+    margin-top: 8px;
+
+    color:
+        var(--muted);
+
+    font-size: 10px;
+}
+
+
+.discover-count {
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 7px;
+}
+
+
+.discover-count strong {
+    color:
+        var(--rtu-blue);
+
+    font-size: 30px;
+
+    font-weight: 950;
+
+    letter-spacing: -1px;
+}
+
+
+.discover-count span {
+    color:
+        var(--light-muted);
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+}
+
+
+/* =====================================================
+   FILTER CARD
+===================================================== */
+
+.discover-filter-card {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        190px
+        auto;
+
+    gap: 10px;
+
+    padding: 10px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 9px;
+
+    background:
+        white;
+
+    box-shadow:
+        0 8px 30px
+        rgba(6,21,34,.04);
+}
+
+
+.discover-search {
+    min-height: 43px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding:
+        0 12px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 7px;
+
+    background:
+        #fbfcfd;
+}
+
+
+.discover-search > span {
+    color:
+        var(--blue);
+
+    font-size: 18px;
+
+    transform:
+        rotate(-20deg);
+}
+
+
+.discover-search input {
+    width: 100%;
+
+    border: 0;
+    outline: 0;
+
+    color:
+        var(--text);
+
+    background: transparent;
+
+    font-family:
+        inherit;
+
+    font-size: 10px;
+}
+
+
+.discover-search input::placeholder {
+    color:
+        #a4adb5;
+}
+
+
+.discover-search button {
+    border: 0;
+
+    color:
+        #9ca6ad;
+
+    background: transparent;
+
+    font-size: 17px;
+
+    cursor: pointer;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity .2s ease;
+}
+
+
+.discover-search.has-value button {
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+
+.discover-filter-card select {
+    min-height: 43px;
+
+    padding:
+        0 12px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 7px;
+
+    outline: 0;
+
+    color:
+        var(--text);
+
+    background:
+        #fbfcfd;
+
+    font-family:
+        inherit;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.discover-clear {
+    min-height: 43px;
+
+    padding:
+        0 18px;
+
+    border:
+        1px solid
+        #d5dfe5;
+
+    border-radius: 7px;
+
+    color:
+        var(--rtu-blue);
+
+    background:
+        white;
+
+    font-family:
+        inherit;
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition:
+        .2s ease;
+}
+
+
+.discover-clear:hover {
+    color: white;
+
+    border-color:
+        var(--rtu-blue);
+
+    background:
+        var(--rtu-blue);
+}
+
+
+/* =====================================================
+   ACTIVITY GRID
+===================================================== */
+
+.discover-grid-list {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+
+    margin-top: 22px;
+}
+
+
+/* =====================================================
+   ACTIVITY CARD
+===================================================== */
+
+.discover-activity-card {
+    position: relative;
+
+    min-height: 275px;
+
+    overflow: hidden;
+
+    padding: 23px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 10px;
+
+    background:
+        white;
+
+    box-shadow:
+        0 10px 35px
+        rgba(6,21,34,.035);
+
+    cursor: pointer;
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease,
+        border-color .3s ease;
+}
+
+
+.discover-activity-card::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 3px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--blue),
+            var(--orange)
+        );
+
+    transform:
+        scaleX(0);
+
+    transform-origin:
+        left;
+
+    transition:
+        transform .35s ease;
+}
+
+
+.discover-activity-card:hover {
+    transform:
+        translateY(-7px);
+
+    border-color:
+        #cdd9e1;
+
+    box-shadow:
+        0 20px 50px
+        rgba(6,21,34,.09);
+}
+
+
+.discover-activity-card:hover::before {
+    transform:
+        scaleX(1);
+}
+
+
+/* =====================================================
+   CARD TOP
+===================================================== */
+
+.discover-card-top {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.discover-category {
+    display: inline-flex;
+
+    align-items: center;
+
+    min-height: 23px;
+
+    padding:
+        0 8px;
+
+    border-radius: 5px;
+
+    color:
+        var(--rtu-blue);
+
+    background:
+        #edf5fb;
+
+    font-size: 6px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+}
+
+
+.discover-card-index {
+    color:
+        #a6b0b8;
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+    letter-spacing: .8px;
+}
+
+
+/* =====================================================
+   CARD TITLE
+===================================================== */
+
+.discover-card-title {
+    margin-top: 28px;
+
+    color:
+        var(--rtu-blue);
+
+    font-size: 21px;
+
+    font-weight: 950;
+
+    line-height: 1.05;
+
+    letter-spacing: -.8px;
+}
+
+
+.discover-card-description {
+    display: -webkit-box;
+
+    margin-top: 11px;
+
+    overflow: hidden;
+
+    color:
+        #778590;
+
+    font-size: 9px;
+
+    line-height: 1.7;
+
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+
+/* =====================================================
+   CARD INFO
+===================================================== */
+
+.discover-card-info {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap: 1px;
+
+    margin-top: 22px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 7px;
+
+    overflow: hidden;
+
+    background:
+        var(--border);
+}
+
+
+.discover-info-item {
+    min-width: 0;
+
+    padding:
+        10px;
+
+    background:
+        #fbfcfd;
+}
+
+
+.discover-info-item span {
+    display: block;
+
+    color:
+        var(--light-muted);
+
+    font-size: 5px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+}
+
+
+.discover-info-item strong {
+    display: block;
+
+    margin-top: 5px;
+
+    overflow: hidden;
+
+    color:
+        var(--text);
+
+    font-size: 8px;
+
+    font-weight: 850;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =====================================================
+   CARD FOOTER
+===================================================== */
+
+.discover-card-footer {
+    position: absolute;
+
+    left: 23px;
+    right: 23px;
+    bottom: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.discover-organizer {
+    overflow: hidden;
+
+    color:
+        #9aa5ae;
+
+    font-size: 6px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+.discover-open {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    color:
+        var(--orange);
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+    letter-spacing: .3px;
+
+    transition:
+        gap .2s ease;
+}
+
+
+.discover-activity-card:hover
+.discover-open {
+    gap: 9px;
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.discover-loading {
+    grid-column:
+        1 / -1;
+
+    min-height: 230px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 14px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 10px;
+
+    background:
+        white;
+
+    color:
+        var(--light-muted);
+
+    font-size: 8px;
+
+    font-weight: 800;
+}
+
+
+.discover-loading-bar {
+    width: 55px;
+
+    height: 3px;
+
+    overflow: hidden;
+
+    border-radius: 3px;
+
+    background:
+        #e3e8eb;
+}
+
+
+.discover-loading-bar::after {
+    content: "";
+
+    display: block;
+
+    width: 50%;
+
+    height: 100%;
+
+    background:
+        var(--orange);
+
+    animation:
+        discoverLoading
+        1s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes discoverLoading {
+
+    0% {
+        transform:
+            translateX(-100%);
+    }
+
+    100% {
+        transform:
+            translateX(200%);
+    }
+
+}
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.discover-empty {
+    padding:
+        80px 20px;
+
+    text-align: center;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 10px;
+
+    background:
+        white;
+}
+
+
+.discover-empty-icon {
+    color:
+        var(--orange);
+
+    font-size: 28px;
+}
+
+
+.discover-empty > span {
+    display: block;
+
+    margin-top: 10px;
+
+    color:
+        var(--light-muted);
+
+    font-size: 6px;
+
+    font-weight: 900;
+
+    letter-spacing: 1.5px;
+}
+
+
+.discover-empty h3 {
+    margin-top: 8px;
+
+    color:
+        var(--rtu-blue);
+
+    font-size: 22px;
+
+    font-weight: 950;
+
+    letter-spacing: -.7px;
+}
+
+
+.discover-empty p {
+    margin-top: 8px;
+
+    color:
+        var(--muted);
+
+    font-size: 9px;
+}
+
+
+.discover-empty button {
+    margin-top: 18px;
+
+    padding:
+        10px 16px;
+
+    border: 0;
+
+    border-radius: 6px;
+
+    color: white;
+
+    background:
+        var(--rtu-blue);
+
+    font-family:
+        inherit;
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+.activities-toast {
+    position: fixed;
+
+    right: 25px;
+    bottom: 25px;
+
+    z-index: 9999;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    max-width: 350px;
+
+    padding:
+        14px 17px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 9px;
+
+    background:
+        rgba(255,255,255,.96);
+
+    box-shadow:
+        0 20px 50px
+        rgba(6,21,34,.15);
+
+    backdrop-filter:
+        blur(15px);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform:
+        translateY(20px);
+
+    transition:
+        .3s ease;
+}
+
+
+.activities-toast.show {
+    opacity: 1;
+
+    visibility: visible;
+
+    transform:
+        translateY(0);
+}
+
+
+.activities-toast-icon {
+    width: 31px;
+    height: 31px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    color: white;
+
+    background:
+        var(--green);
+
+    font-size: 13px;
+
+    font-weight: 900;
+}
+
+
+.activities-toast div:last-child {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.activities-toast strong {
+    color:
+        var(--rtu-blue);
+
+    font-size: 9px;
+}
+
+
+.activities-toast span {
+    color:
+        var(--muted);
+
+    font-size: 7px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1000px) {
+
+    .discover-grid-list {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .discover-hero-inner {
+        min-height: 430px;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        justify-content: center;
+
+        gap: 25px;
+    }
+
+
+    .discover-hero {
+        min-height: 500px;
+    }
+
+
+    .discover-hero-stat {
+        min-width: 180px;
+    }
+
+
+    .discover-filter-card {
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+
+    .discover-search {
+        grid-column:
+            1 / -1;
+    }
+
+
+    .discover-clear {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .discover-grid-list {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .discover-heading {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .discover-filter-card {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .discover-search {
+        grid-column:
+            auto;
+    }
+
+
+    .discover-hero h1 {
+        font-size: 47px;
+
+        letter-spacing: -2.5px;
+    }
+
+
+    .discover-hero-bottom {
+        font-size: 6px;
+    }
+
+
+    .discover-main {
+        padding-top: 50px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .discover-hero-inner,
+    .discover-main-inner,
+    .discover-hero-bottom {
+        width:
+            calc(100% - 28px);
+    }
+
+
+    .discover-hero h1 {
+        font-size: 40px;
+    }
+
+
+    .discover-activity-card {
+        min-height: 285px;
+    }
+
+
+    .activities-toast {
+        right: 14px;
+        left: 14px;
+        bottom: 14px;
+
+        max-width: none;
+    }
+
+}
